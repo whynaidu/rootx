@@ -1,0 +1,31 @@
+#root {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.card{
+  margin:15px 0 15px 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
+-moz-box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
+box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
+}
+
+
+
+.pulseLoader {
+ width: 80px;
+ height: 100px;
+ border-radius: 50%;
+ background-color: rgb(73, 73, 159);
+ outline: 1px solid transparent;
+ animation: pulse 2s ease-in-out infinite; 
+}
+
+@keyframes pulse {
+  0% { transform: scale(0); opacity: 0.8;}
+  100% { transform: scale(1.5); opacity: 0;}
+}
