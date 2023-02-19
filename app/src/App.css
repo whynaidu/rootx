@@ -1,15 +1,16 @@
 #root {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
+  
 
 .card{
-  margin:15px 0 15px 0;
-  background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(20px);
-  -webkit-box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
+margin:15px 0 15px 0;
+background-color: rgba(255, 255, 255, 0.5);
+backdrop-filter: blur(20px);
+-webkit-box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
 -moz-box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
 box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
 }

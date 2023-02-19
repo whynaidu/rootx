@@ -18,15 +18,19 @@ const Linkschema = new mongoose.Schema({
   },
   visible: {
     type: Boolean,
+  },
+  views: {
+    viewsAt: {
+      type: Date,
+      default: Date.now(),
     },
-    views: {
-        viewsAt: {
-            type: Date,
-            default:Date.now()
-      }
-  }
+  },
+  creatorUsername: {
+    type: String,
+    required: true,
+  },
 });
 
-const CreatorLinks = mongoose.model("creator", Linkschema);
+const CreatorLinks = mongoose.model("link", Linkschema);
 
-module.exports = CreatorLinks
+module.exports = CreatorLinks;
