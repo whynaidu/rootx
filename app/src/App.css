@@ -1,8 +1,6 @@
 #root {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+
+  /* text-align: center; */
 }
   
 
@@ -17,6 +15,14 @@ box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
 
 
 
+.pulseLoader2 {
+ width: 65px;
+ height: 90px;
+ border-radius: 50%;
+ background-color: rgb(73, 73, 159);
+ outline: 1px solid transparent;
+ animation: pulse 2s ease-in-out infinite; 
+}
 .pulseLoader {
  width: 80px;
  height: 100px;

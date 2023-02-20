@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "../assets/pixel-5a-renders-leaked.jpg";
 
 export default function Links(props) {
   return (

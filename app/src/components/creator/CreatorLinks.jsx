@@ -19,7 +19,9 @@ export default function CreatorLinks() {
    });
  }, []);
   return (
-    <div>
+    <div style={{  maxWidth: "800px",
+  margin:"0 auto",
+  padding: "2rem"}}>
       <CreatorProifileCard />
       {links.map((element, c) => (
         
