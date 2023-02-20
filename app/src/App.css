@@ -1,9 +1,7 @@
-#root {
-
-  /* text-align: center; */
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+#root{
+  font-family: 'Poppins', sans-serif;
 }
-  
-
 .card{
 margin:15px 0 15px 0;
 background-color: rgba(255, 255, 255, 0.5);

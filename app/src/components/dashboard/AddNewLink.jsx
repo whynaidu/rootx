@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 export default function AddNewLink() {
   return (
     <div>
-      <button className="relative inline-flex items-center justify-center px-7 py-1 backdrop-blur-xl bg-gray-100/70 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out rounded-md shadow-md group">
+      <button className="relative inline-flex items-center justify-center px-7 py-2 backdrop-blur-xl bg-purple-300/60 overflow-hidden font-medium text-purple-800 transition duration-300 ease-out rounded-md shadow-md group">
         <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-800 group-hover:translate-x-0 ease">
           <svg
             className="w-6 h-6"
