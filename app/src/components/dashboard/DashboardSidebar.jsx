@@ -30,7 +30,7 @@ export default function DashboardSidebar() {
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav>
             <Link
-              to="/dashboard/DashboardLinksNew"
+              to="/dashboard/home"
               className="flex items-center px-4 py-2 text-gray-800 bg-gray-100 rounded-lg dark:bg-purple-800 dark:text-gray-200"
               href="#"
             >
@@ -147,7 +147,7 @@ export default function DashboardSidebar() {
         >
           <div id="tabs" className="flex justify-between">
             <Link
-              to="/dashboard/dashboardContent"
+              to="/dashboard/home"
               href="#"
               className="w-full focus:text-purple-800 hover:text-purple-800 hover:bg-purple-400/40 hover:rounded-lg  hover:m-2 justify-center inline-block text-center pt-1 pb-1 mt-2"
             >
