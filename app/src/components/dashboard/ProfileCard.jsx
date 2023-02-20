@@ -27,8 +27,8 @@ export default function ProfileCard() {
             src={Image}
           />
         </div>
-        <div className="px-2 w-full">
-          <h1 className="text-2xl font-bold w-full hover:font-extrabold">
+        <div className="px-4 w-full">
+          <h1 className="text-2xl text-purple-800  font-bold w-full">
             Vedant Naidu
           </h1>
           <p className="font-sans text-[12px] font-thin	">

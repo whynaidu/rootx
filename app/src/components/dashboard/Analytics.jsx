@@ -1,5 +1,6 @@
 import React from 'react'
 import AnalyticsTools from './AnalyticsTools';
+import PageHeader from './PageHeader';
 import TopLinks from './TopLinks';
 
 export default function Analytics() {

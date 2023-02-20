@@ -5,6 +5,7 @@ import CreatorLinks from "./components/creator/CreatorLinks";
 import DashboardLinksNew from "./components/dashboard/DashboardLinksNew";
 
 import Analytics from "./components/dashboard/Analytics";
+import ProfileSettings from "./components/dashboard/ProfileSettings";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="home" element={<DashboardLinksNew />} />
           <Route path="Analytics" element={<Analytics />} />
+          <Route path="profile" element={<ProfileSettings />} />
         </Route>
       </Routes>
     </div>

@@ -1,9 +1,10 @@
 import React from "react";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
-import SettingsIcon from "@mui/icons-material/Settings";
+import PersonIcon from "@mui/icons-material/Person";
 import InsightsIcon from "@mui/icons-material/Insights";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { Link } from "react-router-dom";
+import Profile from "../../assets/pixel-5a-renders-leaked.jpg";
 
 export default function DashboardSidebar() {
   return (
@@ -13,18 +14,13 @@ export default function DashboardSidebar() {
           RootX
         </a>
 
-        <div className="flex flex-col items-center mt-6 -mx-2">
+        <div className="flex flex-col items-center mt-6 mx-2">
           <img
-            className="object-cover w-24 h-24 mx-2 rounded-full"
-            src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+            className="object-cover w-20 ring-1 ring-purple-500 h-20 mx-2 rounded-full"
+            src={Profile}
             alt="avatar"
           />
-          <h4 className="mx-2 mt-2 font-medium text-gray-600 dark:text-gray-900">
-            John Doe
-          </h4>
-          <p className="mx-2 mt-1 text-sm font-medium text-gray-600 dark:text-purple-700">
-            john@example.com
-          </p>
+          <h4 className="mx-2 mt-2 font-medium ">Vedant Naidu</h4>
         </div>
 
         <div className="flex flex-col justify-between flex-1 mt-6">
@@ -154,21 +150,22 @@ export default function DashboardSidebar() {
               <DashboardIcon />
               <span className="tab tab-home block text-xs">Dashboard</span>
             </Link>
-            <a
-              href="#"
+
+            <Link
+              to="/dashboard/analytics"
               className="w-full focus:text-purple-800 hover:text-purple-800 hover:bg-purple-400/40 hover:rounded-lg m-2 hover:m-2 justify-center inline-block text-center pt-1 pb-1"
             >
               <InsightsIcon />
 
               <span className="tab tab-kategori block text-xs">Analytics</span>
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/dashboard/profile"
               className="w-full focus:text-purple-800 hover:text-purple-800 hover:bg-purple-400/40  hover:rounded-lg m-2  hover:m-2 justify-center inline-block text-center pt-1 pb-1"
             >
-              <SettingsIcon />
-              <span className="tab tab-explore block text-xs">Setting</span>
-            </a>
+              <PersonIcon />
+              <span className="tab tab-explore block text-xs">Profile</span>
+            </Link>
           </div>
         </section>
       </div>

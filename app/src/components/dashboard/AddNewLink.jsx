@@ -5,7 +5,7 @@ export default function AddNewLink() {
   return (
     <div>
       <button className="relative inline-flex items-center justify-center px-7 py-1 backdrop-blur-xl bg-gray-100/70 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out rounded-md shadow-md group">
-        <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-500 group-hover:translate-x-0 ease">
+        <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-800 group-hover:translate-x-0 ease">
           <svg
             className="w-6 h-6"
             fill="none"
@@ -21,7 +21,7 @@ export default function AddNewLink() {
             ></path>
           </svg>
         </span>
-        <span className="absolute flex items-center justify-center w-full h-full text-purple-500 transition-all duration-300 transform group-hover:translate-x-full ease">
+        <span className="absolute flex items-center justify-center w-full h-full text-purple-800 transition-all duration-300 transform group-hover:translate-x-full ease">
           <AddIcon fontSize="medium" />
           &nbsp;New Root
         </span>

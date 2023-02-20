@@ -21,7 +21,7 @@ export default function DashboardLinks() {
           />
         </div>
         <div className="grid w-full space-y-2 text-center">
-          <h3 className="text-1xl font-semibold lg:text-2xl">Hiii</h3>
+          <h3 className="text-1xl text-purple-800 font-semibold lg:text-2xl">Hiii</h3>
         </div>
         <div>
           <EditIcon />

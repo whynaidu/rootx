@@ -1,16 +1,3 @@
-// import React from "react";
-// import { Outlet } from "react-router";
-// import DashboardContent from "./DashboardContent";
-// import DashboardSidebar from "./DashboardSidebar";
-
-// export default function Dashboard() {
-//   return (
-//     <div className="flex">
-//       <DashboardSidebar />
-//     </div>
-//   );
-// }
-
 import React from "react";
 import { Outlet } from "react-router";
 import DashboardSidebar from "./DashboardSidebar";
