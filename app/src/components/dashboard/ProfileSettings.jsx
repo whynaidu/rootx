@@ -1,13 +1,15 @@
 import React from "react";
 import PageHeader from "./PageHeader";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import PersonIcon from "@mui/icons-material/Person";
+import {Link } from "react-router-dom"
 export default function ProfileSettings() {
   return (
     <div>
-      <div className="bg-gray-100/80 my-5 rounded-lg px-3 py-2">
-        <PageHeader title={"Profile"} />
+      <div className="bg-[#ffffff80] my-5 rounded-lg px-3 py-2">
+        <PageHeader title={"Profile"} Icon={<PersonIcon />} />
       </div>
-      <div className="bg-gray-100/80 rounded-lg p-3">
+      <div className="bg-[#ffffff80] rounded-lg p-3">
         <div className="relative flex">
           <div className="absolute z-0"></div>
           <div className="w-full lg:p-4 p-2 bg-transparent z-10">
@@ -103,9 +105,11 @@ export default function ProfileSettings() {
                     </div>
 
                     <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse">
-                      <button className="mb-2 md:mb-0 text-black font-medium text-sm py-2 px-4 rounded-lg bg-gray-300 hover:bg-red-700 hover:text-white hover:shadow-lg">
-                        Cancel
-                      </button>
+                      <Link to="/dashboard">
+                        <button className="mb-2 md:mb-0 text-black font-medium text-sm py-2 px-4 rounded-lg bg-gray-300 hover:bg-red-700 hover:text-white hover:shadow-lg">
+                          Cancel
+                        </button>
+                      </Link>
                       <button className="mb-2 md:mb-0 text-purple-900 font-medium text-sm py-2 px-4 rounded-lg bg-purple-300/90 hover:bg-purple-800 hover:text-white hover:shadow-lg">
                         Update
                       </button>

@@ -1,12 +1,11 @@
 import React from "react";
-import InsightsIcon from "@mui/icons-material/Insights";
 import PageHeader from "./PageHeader";
-
+import InsightsIcon from "@mui/icons-material/Insights";
 
 export default function AnalyticsTools() {
   return (
     <div>
-      <div className="bg-gray-100/70 rounded-lg my-4">
+      <div className="bg-[#ffffff80] rounded-lg my-4">
         {/* <div className="p-4 flex items-center">
           <div className="text-md lg:text-2xl pb-2 px-2 mr-2 bg-indigo-200 text-indigo-800 rounded-full w-fit">
             <InsightsIcon />
@@ -15,7 +14,7 @@ export default function AnalyticsTools() {
         </div> */}
 
         <div className="p-3">
-          <PageHeader title={ "Analytics"} />
+          <PageHeader title={"Analytics"} Icon={<InsightsIcon />} />
           <ul className="flex justify-evenly cursor-pointer">
             <li className="py-2 mr-1 w-full text-center text-purple-900 hover:bg-white bg-purple-200 rounded-md">
               Today

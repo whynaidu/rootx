@@ -4,7 +4,7 @@ import LinkIcon from "@mui/icons-material/Link";
 export default function TopLinks() {
   return (
     <div>
-      <div className="mt-4 bg-gray-100/70 rounded-lg p-3">
+      <div className="mt-4 bg-[#ffffff80] rounded-lg p-3">
         <h1 className="text-2xl text-bold">Top Roots</h1>
 
         <hr />

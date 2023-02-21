@@ -1,60 +1,53 @@
-import React from 'react'
-import EditIcon from "@mui/icons-material/Edit";
-import AddNewLinkModal from "./AddNewLinkModal"
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import AddIcon from "@mui/icons-material/Add";
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 
+export default function AddNewLinkModal() {
+  let [isOpen, setIsOpen] = useState(false);
 
-export default function DashboardLinks() {
-    let [modalOpen, setIsOpenModal] = useState(false);
-
-    function closeModal() {
-      setIsOpenModal(false);
-    }
-
-    function openModal() {
-      setIsOpenModal(true);
+  function closeModal() {
+    setIsOpen(false);
   }
-  ;
 
-  function alertwarning(){
-    alert("hiii");
-
+  function openModal() {
+    setIsOpen(true);
   }
 
   return (
-    <div>
-      <div className="pb-2 text-xl flex justify-center">
-        <h1 className="my-5 py-1 px-3 bg-purple-100/30 rounded-md w-fit">
-          Roots
-        </h1>
-      </div>
-      <AddNewLinkModal />
-      <div className="flex w-full card px-1.5 py-1.5 items-center pr-4 hover:shadow-indigo-500/40 lg:max-w-full rounded-md">
-        <div className="border-1 h-14 w-16 rounded-lg">
-          <img
-            src="https://picsum.photos/200"
-            alt=""
-            className="border h-[inherit] object-cover rounded-lg max-h-full w-[inherit]	"
-          />
-        </div>
-        <div className="grid w-full space-y-2 text-center">
-          <h3 className="text-1xl text-purple-800 font-semibold lg:text-2xl">
-            Hiii
-          </h3>
-        </div>
+    <>
+      <div className=" inset-0  flex">
         <div>
-          <EditIcon
+          <button
+            className="relative inline-flex items-center justify-center px-7 py-2 backdrop-blur-xl bg-purple-300/60 overflow-hidden font-medium text-purple-800 transition duration-300 ease-out rounded-md shadow-md group"
             onClick={openModal}
-            className="cursor-pointer transition hover:ease-in-out delay-700 text-purple-800 hover:scale-[1.3] hover:text-purple-800 duration-800 "
-          />
+          >
+            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-800 group-hover:translate-x-0 ease">
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                ></path>
+              </svg>
+            </span>
+            <span className="absolute flex items-center justify-center w-full h-full text-purple-800 transition-all duration-300 transform group-hover:translate-x-full ease">
+              <AddIcon fontSize="medium" />
+              &nbsp;New Root
+            </span>
+            <span className="relative invisible">New Root</span>
+          </button>
         </div>
       </div>
 
-      <Transition appear show={modalOpen} as={Fragment}>
+      <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
@@ -79,12 +72,12 @@ export default function DashboardLinks() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white lg:p-5 p-4 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Edit Root
+                    Add New Root
                   </Dialog.Title>
                   <hr />
                   <div className="mt-2">
@@ -97,7 +90,7 @@ export default function DashboardLinks() {
                                 <div className="text-center">
                                   <InsertPhotoIcon fontSize="large" />
                                   <br />
-                                  Change Image
+                                  Select Image
                                 </div>
                               </span>
                               <input
@@ -131,22 +124,6 @@ export default function DashboardLinks() {
                       </div>
                     </form>
                   </div>
-                  <div className="mt-4 flex justify-end">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center mx-2 border-2 border-red-600 text-red-800 font-medium text-sm py-2 px-2 rounded-lg  hover:bg-red-600 hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      <DeleteIcon/>
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-purple-900 px-2 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-<VisibilityOffIcon/>
-                    </button>
-                  </div>
 
                   <div className="mt-4 flex justify-end">
                     <button
@@ -170,6 +147,6 @@ export default function DashboardLinks() {
           </div>
         </Dialog>
       </Transition>
-    </div>
+    </>
   );
 }
