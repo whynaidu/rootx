@@ -106,7 +106,7 @@ export default function ProfileSettings() {
 
                     <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse">
                       <Link to="/dashboard">
-                        <button className="mb-2 md:mb-0 text-black font-medium text-sm py-2 px-4 rounded-lg bg-gray-300 hover:bg-red-700 hover:text-white hover:shadow-lg">
+                        <button className="mb-2 md:mb-0 text-black font-medium text-sm py-2 px-4 rounded-lg bg-slate-300 hover:bg-red-700 hover:text-white hover:shadow-lg">
                           Cancel
                         </button>
                       </Link>
