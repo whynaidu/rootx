@@ -1,20 +1,11 @@
 import React from "react";
-import PageHeader from "./PageHeader";
-import InsightsIcon from "@mui/icons-material/Insights";
+
 
 export default function AnalyticsTools() {
   return (
     <div>
-      <div className="bg-[#ffffff80] rounded-lg my-4">
-        {/* <div className="p-4 flex items-center">
-          <div className="text-md lg:text-2xl pb-2 px-2 mr-2 bg-indigo-200 text-indigo-800 rounded-full w-fit">
-            <InsightsIcon />
-          </div>
-          <h1 className="text-xl">Analytics</h1>
-        </div> */}
-
+      <div className="bg-[#ffffff80] rounded-lg my-4 w-full">
         <div className="p-3">
-          <PageHeader title={"Analytics"} Icon={<InsightsIcon />} />
           <ul className="flex justify-evenly cursor-pointer">
             <li className="py-2 mr-1 w-full text-center text-purple-900 hover:bg-white bg-purple-200 rounded-md">
               Today

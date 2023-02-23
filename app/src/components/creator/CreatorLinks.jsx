@@ -11,7 +11,6 @@ export default function CreatorLinks() {
  const url = "http://localhost:3001/whynaidu";
 
  const [links, setLinks] = useState([]);
-
  useEffect(() => {
    axios.get(url).then((res) => {
      setLinks(res.data);

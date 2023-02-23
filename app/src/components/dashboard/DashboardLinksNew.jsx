@@ -4,13 +4,20 @@ import Tools from './Tools';
 import DashboardLinks from './DashboardLinks'
 import Greetings from './Greetings';
 
-export default function DashboardLinksNew() {
+export default function DashboardLinksNew(props) {
+
+
+
   return (
-    <div>
-      <Greetings/>
-      <ProfileCard />
-      <Tools />
-      <DashboardLinks />
-    </div>
+    <>
+      {console.log(props.name)}
+
+      <div>
+        <Greetings />
+        <ProfileCard />
+        <Tools />
+        <DashboardLinks />
+      </div>
+    </>
   );
 }

@@ -7,6 +7,7 @@ import Analytics from "./components/dashboard/Analytics";
 import ProfileSettings from "./components/dashboard/ProfileSettings";
 import NotFound from "./components/dashboard/NotFound";
 import Login from "./components/dashboard/Login";
+import SignUp from "./components/dashboard/SignUp";
 
 function App() {
   
@@ -21,6 +22,7 @@ function App() {
         </Route>
         <Route path="*" element={<NotFound />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </div>
   );

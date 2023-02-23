@@ -1,65 +1,87 @@
 import React, { useState } from 'react'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+// import { useNavigate } from "react-router-dom";
+// import { useFormik } from "formik"
+import { Toaster } from 'react-hot-toast';
+// import { loginvalidate } from "../../helper/validate";
 
 
 export default function Login() {
+    const navigate = useNavigate();
 
-  let [Email, setEmail] = useState("");
+  	const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-  let [password, setPassword] = useState("");
-  
-  const navigate = useNavigate();
+  // let [Email, setEmail] = useState("");
 
-   const onChangeEmail = (e) => {
-     const email = e.target.value;
-      setEmail(email);
-   };
+  // let [password, setPassword] = useState("");
 
-   const onChangePassword = (e) => {
-     const password = e.target.value;
-     setPassword(password);
-   };
+  // const formik = useFormik({
+  //   initialValues: {
+  //     email: "",
+  //     password: "",
+  //   },
+  //   validate: loginvalidate,
+  //   // validate: passwordvalidate,
+  //   validateOnBlur: false,
+  //   validateOnChange: false,
+  //   onSubmit: async (values) => {
+  //     console.log(values);
+  //   },
+  // });
 
-
-  function LoginSubmit(event)
-  {
-    // alert("dsfsdf")
+  async function loginUser(event) {
     event.preventDefault();
-    const formData = new FormData();
-    formData.append("email", Email);
-    formData.append("password", password);
-    // axios
-    //   .post(`http://localhost:3001/upload/`, formData)
-    //   .then((res) => {
-        
-    //   })
-    //   .catch((err) => {
-    //     console.log(res.data);
-    //   });
+  const response = await axios.post(
+    "http://localhost:3001/api/login",
+    {
+      email,
+      password,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
+  );
+
+    const data = await response.data;
+
+    if (data.user) {
+      localStorage.setItem("token", data.user);
+      alert("Login successful");
+      navigate("/dashboard");
+    } else {
+      alert("Please check your username and password");
+    }
+  }
+
+
 
   return (
     <div>
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="loginPage justify-center w-full bg-cover h-[100vh] flex items-center">
-        <div className="bg-[#ffffff80]  lg:w-1/3 rounded-xl m-4 p-6 mt-auto mb-auto border border-purple-800 shadow-xl">
-          <div className="px-6 text-gray-800">
+        <div className="bg-[#ffffff80]  lg:w-1/3 rounded-xl m-4 p-6 mt-auto mb-auto shadow-lg">
+          <div className="lg:px-6 px-2 text-gray-800">
             <div className="flex h-full items-center justify-center xl:justify-center">
               <div className="w-full">
                 <h1 className="text-center text-4xl font-medium my-5">Login</h1>
-                <form onSubmit={LoginSubmit}>
+                <form onSubmit={loginUser}>
                   <div className="mb-3">
                     <label className="mb-4 text-xl">Email</label>
                     <input
                       type="email"
-                      required
                       className="w-full mt-2 
                     rounded-lg border-1 border-purple-800 bg-transparent leading-none text-purple-900 backdrop-blur-lg 
                     transition-colors duration-200 focus:outline-none 
                     md:py-4 md:pr-4 lg:py-4 lg:pr-4"
                       placeholder="Email"
-                      onChange={onChangeEmail}
+                      onChange={(e) => setEmail(e.target.value)}
+
+                      // {...formik.getFieldProps("email")}
+                      // onChange={onChangeEmail}
                     />
                   </div>
 
@@ -67,13 +89,14 @@ export default function Login() {
                     <label className="mb-4 text-xl">Password</label>
                     <input
                       type="password"
-                      required
+                      onChange={(e) => setPassword(e.target.value)}
+                      // {...formik.getFieldProps("password")}
                       className="w-full 
                     rounded-lg border-1 border-purple-800 bg-transparent leading-none text-purple-900  backdrop-blur-lg 
                     transition-colors duration-200 focus:outline-none 
                     md:py-4 md:pr-4 lg:py-4 lg:pr-4"
                       placeholder="Password"
-                      onChange={onChangePassword}
+                      // onChange={onChangePassword}
                     />
                   </div>
 

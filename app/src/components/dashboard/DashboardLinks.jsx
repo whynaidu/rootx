@@ -28,7 +28,7 @@ export default function DashboardLinks() {
   return (
     <div>
       <div className="pb-2 text-xl flex justify-center">
-        <h1 className="my-5 py-1 px-3 bg-purple-100/30 rounded-md w-fit">
+        <h1 className="my-5 py-1 px-3 bg-purple-300 text-purple-800 rounded-md w-fit">
           Roots
         </h1>
       </div>

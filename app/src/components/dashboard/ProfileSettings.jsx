@@ -6,10 +6,10 @@ import {Link } from "react-router-dom"
 export default function ProfileSettings() {
   return (
     <div>
-      <div className="bg-[#ffffff80] my-5 rounded-lg px-3 py-2">
+      <div>
         <PageHeader title={"Profile"} Icon={<PersonIcon />} />
       </div>
-      <div className="bg-[#ffffff80] rounded-lg p-3">
+      <div className="bg-[#ffffff80] rounded-lg p-3 mt-5">
         <div className="relative flex">
           <div className="absolute z-0"></div>
           <div className="w-full lg:p-4 p-2 bg-transparent z-10">
