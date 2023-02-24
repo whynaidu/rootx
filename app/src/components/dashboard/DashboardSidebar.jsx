@@ -5,6 +5,7 @@ import InsightsIcon from "@mui/icons-material/Insights";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { NavLink } from "react-router-dom";
 import Profile from "../../assets/pixel-5a-renders-leaked.jpg";
+import { useAuth } from "../../auth/auth";
 
 export default function DashboardSidebar() {
      let activeStyle = {

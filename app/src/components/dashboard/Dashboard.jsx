@@ -10,7 +10,7 @@ export default function DashboardContent() {
     <div className="flex justify-center w-full">
       <div className="w-full px-5 mr-0 lg:ml-64 max-w-screen-sm lg:max-w-screen-md">
         <DashboardSidebar />
-        <Outlet name={"Vedsasd"} />
+        <Outlet/>
       </div>
     </div>
   );

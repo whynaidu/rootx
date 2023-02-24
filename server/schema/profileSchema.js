@@ -65,82 +65,66 @@ const ProfileSchema = new mongoose.Schema({
   ],
   SocialLinks: {
     facebook: {
-      url: {
         type: String,
         default: null,
-      },
+    
     },
     instagram: {
-      url: {
+      
         type: String,
         default: null,
-      },
+     
     },
     telegram: {
-      url: {
+      
         type: String,
         default: null,
-      },
+      
     },
     tiktok: {
-      url: {
+     
         type: String,
-        default: "",
-      },
+        default: null,
+     
     },
     twitter: {
-      url: {
+     
         type: String,
         default: null,
-      },
     },
     youtube: {
-      url: {
+      
         type: String,
         default: null,
-      },
     },
     dribble: {
-      url: {
+    
         type: String,
         default: null,
-      },
     },
     linkedin: {
-      url: {
         type: String,
         default: null,
-      },
     },
     snapchat: {
-      url: {
         type: String,
         default: null,
-      },
     },
     whatsapp: {
-      url: {
         type: String,
         default: null,
-      },
     },
     pinterest: {
-      url: {
         type: String,
         default: null,
-      },
     },
     spotify: {
-      url: {
         type: String,
         default: null,
-      },
     },
     twitch: {
-      url: {
         type: String,
         default: null,
-      },
     },
   },
 });
