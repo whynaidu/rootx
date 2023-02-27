@@ -2,13 +2,19 @@ import React from "react";
 import Image from "../../assets/pixel-5a-renders-leaked.jpg";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
+import { useEffect, useState } from "react";
+
 // import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 
-export default function ProfileCard() {
+export default function ProfileCard(props) {
 //   const url = "http://localhost:3001/whynaidu";
 
-//   const [links, setLinks] = useState([]);
+ const [profileData, setProfileData] = useState({});
+
+  useEffect(()=>{
+  setProfileData(props.profile)
+  })
 
 //   useEffect(() => {
 //     axios.get(url).then((res) => {
@@ -29,12 +35,14 @@ export default function ProfileCard() {
           />
         </div>
         <div className="px-4 w-full">
-          <h1 className="text-2xl text-purple-800  font-bold w-full">
-            Vedant Naidu
+          <div className="flex flex-wrap">
+          <h1 className="text-2xl text-purple-800 font-bold mr-3">
+            {profileData.name}
           </h1>
-          <p className="font-sans text-[12px] font-thin	">
-            Software Developer at SlashRTC
-          </p>
+          <span className="lg:text-lg text-slate-400 text-lg">(@{profileData.username})</span>
+          
+          </div>
+          <p className="font-sans text-[12px] font-thin	">{profileData.bio}</p>
         </div>
         <div>
           <Link to="/profile">

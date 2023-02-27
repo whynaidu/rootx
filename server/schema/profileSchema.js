@@ -27,12 +27,13 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Pageviews: {
-    viewsAt: {
+  Pageviews: [
+    {
       type: Date,
       default: Date.now(),
     },
-  },
+  ],
+
   Link: [
     {
       linkName: {
@@ -53,7 +54,7 @@ const ProfileSchema = new mongoose.Schema({
       },
       visible: {
         type: Boolean,
-        default:true,
+        default: true,
       },
       views: {
         viewsAt: {
@@ -65,66 +66,56 @@ const ProfileSchema = new mongoose.Schema({
   ],
   SocialLinks: {
     facebook: {
-        type: String,
-        default: null,
-    
+      type: String,
+      default: null,
     },
     instagram: {
-      
-        type: String,
-        default: null,
-     
+      type: String,
+      default: null,
     },
     telegram: {
-      
-        type: String,
-        default: null,
-      
+      type: String,
+      default: null,
     },
     tiktok: {
-     
-        type: String,
-        default: null,
-     
+      type: String,
+      default: null,
     },
     twitter: {
-     
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     youtube: {
-      
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     dribble: {
-    
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     linkedin: {
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     snapchat: {
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     whatsapp: {
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     pinterest: {
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     spotify: {
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     twitch: {
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
   },
 });

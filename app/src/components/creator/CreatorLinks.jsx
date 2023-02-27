@@ -7,7 +7,7 @@ import axios from "axios";
 import BrandLink from "./BrandLink";
 
 export default function CreatorLinks() {
-  const url = "http://localhost:3001/whynaidu";
+  const url = "http://localhost:3001/naiduvedant@gmail.com";
 
   const [links, setLinks] = useState([]);
   useEffect(() => {

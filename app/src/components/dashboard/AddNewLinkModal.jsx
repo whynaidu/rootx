@@ -1,10 +1,16 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import axios from "axios";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import { Toaster } from "react-hot-toast";
 
 export default function AddNewLinkModal() {
   let [isOpen, setIsOpen] = useState(false);
+  const [file, setfile] = useState(null);
+  const [RootName, setRootName] = useState("");
+  const [RootUrl, setRootUrl] = useState("");
+  const [RootImage, setRootImage] = useState("");
 
   function closeModal() {
     setIsOpen(false);
@@ -14,8 +20,44 @@ export default function AddNewLinkModal() {
     setIsOpen(true);
   }
 
+  function handleRootName(click) {
+    setRootName(click.target.value);
+  }
+  function handleRootUrl(click) {
+    setRootUrl(click.target.value);
+  }
+
+  function handleRootImage(click) {
+    setRootImage(click.target.files[0]);
+    setfile(URL.createObjectURL(click.target.files[0]));
+  }
+
+  async function AddRoot(click) {
+    click.preventDefault();
+    const formData = new FormData();
+    //  formData.append("linkImagName", RootImage);
+    formData.append("linkname", RootName);
+    formData.append("linkurl", RootUrl);
+    const addLink = await axios
+      .post(`http://localhost:3001/api/addlink`, {
+        linkname: RootName,
+        linkurl: RootUrl
+  
+      })
+      .then((res) => {
+        console.log(res);
+        setIsOpen(false)
+        toast.success(res.data);
+      })
+      .catch((err) => {
+        //  toast.error(err);
+        console.log(res.data);
+      });
+  }
+
   return (
     <>
+      <Toaster position="top-center"/>
       <div className=" inset-0  flex">
         <div>
           <button
@@ -80,8 +122,8 @@ export default function AddNewLinkModal() {
                     Add New Root
                   </Dialog.Title>
                   <hr />
-                  <div className="mt-2">
-                    <form>
+                  <form onSubmit={AddRoot}>
+                    <div className="mt-2">
                       <div className="flex">
                         <div className="w-1/2">
                           <div className="flex items-center justify-center h-full w-full">
@@ -93,11 +135,11 @@ export default function AddNewLinkModal() {
                                   Select Image
                                 </div>
                               </span>
+
                               <input
                                 type="file"
                                 className="hidden"
-                                multiple="multiple"
-                                accept="accept"
+                                onChange={handleRootImage}
                               />
                             </label>
                           </div>
@@ -109,6 +151,7 @@ export default function AddNewLinkModal() {
                               type="text"
                               className="bg-transparent w-full rounded-lg border-2 border-purple-900 mb-2"
                               placeholder="Root Name"
+                              onChange={handleRootName}
                             />
                           </div>
 
@@ -118,29 +161,29 @@ export default function AddNewLinkModal() {
                               type="text"
                               className="bg-transparent w-full rounded-lg border-2 border-purple-800"
                               placeholder="https://example.com"
+                              onChange={handleRootUrl}
                             />
                           </div>
                         </div>
                       </div>
-                    </form>
-                  </div>
+                    </div>
 
-                  <div className="mt-4 flex justify-end">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center mx-2 border border-transparent text-black font-medium text-sm py-2 px-4 rounded-lg bg-gray-300 hover:bg-red-700 hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-purple-300 px-4 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Add Root
-                    </button>
-                  </div>
+                    <div className="mt-4 flex justify-end">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center mx-2 border border-transparent text-black font-medium text-sm py-2 px-4 rounded-lg bg-gray-300 hover:bg-red-700 hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={closeModal}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-purple-300 px-4 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      >
+                        Add Root
+                      </button>
+                    </div>
+                  </form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

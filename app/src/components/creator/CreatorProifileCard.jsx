@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 export default function CreatorProifileCard() {
 
- const url = "http://localhost:3001/whynaidu";
+ const url = "http://localhost:3001/naiduvedant@gmail.com";
 
  const [creator, setCreator] = useState([]);
 
@@ -23,14 +23,14 @@ export default function CreatorProifileCard() {
         <div className="justify-center card items-center rounded-lg py-5">
           <div className="flex justify-center w-full h-20">
             <div className="pulseLoader relative h-full"></div>
-            {creator.bio === null ? (
+            {creator.logo === null ? (
               <img
                 className="absolute ring-1 ring-blue-500 rounded-full h-[inherit]"
                 src={Image}
               />
             ) : (
               <img
-                className="absolute ring-1 ring-blue-500 rounded-full h-[inherit]"
+                className="absolute ring-1 w-20 ring-blue-500 rounded-full h-[inherit]"
                 src={creator.logo}
               />
             )}

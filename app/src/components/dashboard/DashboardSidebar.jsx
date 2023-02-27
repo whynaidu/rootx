@@ -43,7 +43,6 @@ export default function DashboardSidebar() {
               style={({ isActive }) => (isActive ? activeStyle : undefined)}
               to="/dashboard"
               className="flex items-center px-4 py-2 mt-5 transition-colors duration-300 transform rounded-lg dark:text-purple-700 hover:bg-gray-100 dark:hover:bg-purple-800 dark:hover:text-gray-200 hover:text-gray-800"
-              href="#"
             >
               <svg
                 className="w-5 h-5"

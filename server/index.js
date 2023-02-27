@@ -18,17 +18,17 @@ require("./db/config");
 // })
 
 app.post("/api/addlink", async (req, res) => {
-  const { linkname, linkurl, linkimagename, Visible } = req.body;
+  const { linkname, linkurl } = req.body;
   const addlink = await ProfileSchema.findOneAndUpdate(
-    { creatorUsername: "whynaidu" },
+    { creatoremail: "naiduvedant@gmail.com" },
 
     {
       $push: {
         Link: {
           linkName: linkname,
           linkUrl: linkurl,
-          linkImagName: linkimagename,
-          visible: Visible,
+          // linkImagName: linkimagename,
+          // visible: Visible,
         },
       },
     },
@@ -65,42 +65,42 @@ app.post("/api/adduser", async (req, res) => {
   }
 });
 
-app.post("/api/login", async (req, res) => {
-  const user = await ProfileSchema.findOne({ creatoremail: req.body.email });
+// app.post("/api/login", async (req, res) => {
+//   const user = await ProfileSchema.findOne({ creatoremail: req.body.email });
 
-  if (!user) {
-    return res.json({ status: "error", error: "Invalid login" });
-  }
+//   if (!user) {
+//     return res.json({ status: "error", error: "Invalid login" });
+//   }
 
-  const isPasswordValid = await bcrypt.compare(
-    req.body.password,
-    user.password
-  );
+//   const isPasswordValid = await bcrypt.compare(
+//     req.body.password,
+//     user.password
+//   );
 
-  if (isPasswordValid) {
-    const token = jwt.sign(
-      {
-        name: user.creatorname,
-        email: user.creatoremail,
-      },
-      "secret123"
-    );
+//   if (isPasswordValid) {
+//     const token = jwt.sign(
+//       {
+//         name: user.creatorname,
+//         email: user.creatoremail,
+//       },
+//       "secret123"
+//     );
 
-    return res.json({ status: "ok", user: token });
-  } else {
-    return res.json({ status: "error", user: false });
-  }
-});
+//     return res.json({ status: "ok", user: token });
+//   } else {
+//     return res.json({ status: "error", user: false });
+//   }
+// });
 
-app.post("/api/updateLink/:username/:id", async (req, res) => {
+app.post("/api/updateLink/:email/:id", async (req, res) => {
   const linkId = req.params.id;
-    const username = req.params.username;
+    const email = req.params.email;
 
   console.log(linkId);
   const { linkname, linkurl, linkimagename, Visible } = req.body;
 
   const data = await ProfileSchema.findOneAndUpdate(
-    { creatorUsername: username, Link: { $elemMatch: { _id: linkId } } },
+    { creatoremail: email, Link: { $elemMatch: { _id: linkId } } },
     {
       $set: {
         "Link.$.linkName": linkname,
@@ -120,8 +120,8 @@ app.post("/api/profile/:email", async (req, res) => {
   // const linkId = req.params.id;
   const email = req.params.email;
 
-  console.log(email);
-  const { name, username, bio } = req.body;
+  // console.log(email);
+  const { name, username, bio, logo } = req.body;
 
   const data = await ProfileSchema.findOneAndUpdate(
     { creatoremail: email },
@@ -129,6 +129,7 @@ app.post("/api/profile/:email", async (req, res) => {
       creatorname: name,
       creatorUsername: username,
       bio,
+      logo
     },
     {
       new: true,
@@ -172,18 +173,43 @@ app.post("/api/deleteLink/:username/:id", async (req, res) => {
    const username = req.params.username;
   const linkId = req.params.id;
   const deleteLink = await ProfileSchema.findOneAndUpdate(
-    { creatorUsername: username },
+    { creatoremail: username },
     { $pull: { Link: { _id: linkId } } }
   );
   res.send(deleteLink);
 });
 
+app.get("/:email", async (req, res) => {
+  const mail = req.params.email;
+  const data = await ProfileSchema.find({ creatoremail: mail });
+  res.send(data);
+  // console.log(data);
+});
+
+
 app.get("/:username", async (req, res) => {
-  const username = req.params.username;
+  const username = req.params.email;
   const data = await ProfileSchema.find({ creatorUsername: username });
   res.send(data);
-  console.log(data);
+  // console.log(data);
 });
+
+app.get("/api/getUserLinks/:email/:linkid", async (req, res) => {
+  const email = req.params.email;
+  const linkId = req.params.linkid;
+  const data = await ProfileSchema.find(
+    {
+      creatoremail: email,
+      Link: {
+        $elemMatch: { _id: linkId },
+      },
+    },
+    { "Link.$": 1 }
+  );
+  res.send(data);
+});
+
+
 
 app.post("/deleteall", async (req, res) => {
   const data = await ProfileSchema.deleteMany();

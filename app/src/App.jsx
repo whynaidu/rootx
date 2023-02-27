@@ -18,21 +18,21 @@ function App() {
   
   return (
     <AuthProvider>
-        <Routes>
-          <Route exact path="/whynaidu" element={<CreatorLinks />} />
+      <Routes>
+        <Route exact path="/whynaidu" element={<CreatorLinks />} />
 
-          <Route path="/" element={<Dashboard />}>
-            <Route path="dashboard" element={<DashboardLinksNew />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="profile" element={<ProfileSettings />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/testlogin" element={<TestLogin />} />
-          <Route path="/testProfile" element={<TestProfile />} />
+        <Route path="/" element={<Dashboard />}>
+          <Route path="dashboard" element={<DashboardLinksNew />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="profile" element={<ProfileSettings />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/testlogin" element={<TestLogin />} />
+        <Route path="/testProfile" element={<TestProfile />} />
 
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
     </AuthProvider>
   );
 }
