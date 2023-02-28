@@ -6,8 +6,47 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import { NavLink } from "react-router-dom";
 import Profile from "../../assets/pixel-5a-renders-leaked.jpg";
 import { useAuth } from "../../auth/auth";
+import { useEffect, useState} from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
+
 
 export default function DashboardSidebar() {
+
+  const auth = useAuth();
+  const [CreatorName, setCreatorName] = useState()
+  const navigate = useNavigate();
+
+
+
+   useEffect(() => {
+     const tokenValue = localStorage.getItem("Name");
+     if (tokenValue) {
+       auth.setUser(tokenValue);
+       
+     }
+
+     const url = auth.user
+       ? `http://localhost:3001/${auth.user}`
+       : "http://localhost:3001/";  
+
+     const getUsers = async () => {
+       const getdata = await axios.get(url);
+      setCreatorName(getdata.data[0].creatorname);
+     };
+     getUsers();
+   },[auth.user]);
+
+function logout()
+{
+  auth.setUser(null)
+  auth.setToken(null);
+  localStorage.removeItem("Name")
+  console.log(auth)
+   navigate("/login");
+}
      let activeStyle = {
        background: "rgb(107 33 168)",
        color: "white",
@@ -20,7 +59,6 @@ export default function DashboardSidebar() {
      color: "white",
    };
 
-   let activeClassName = "dark:bg-purple-800";
   return (
     <div>
       <aside className="lg:flex flex-col hidden left-0 overflow-x-hidden overflow-y-auto z-50 w-56 fixed h-screen px-4 py-8 rounded-tr-3xl rounded-br-3xl shadow-xl bg-[#ffffff80] backdrop-blur-xl dark:border-gray-800">
@@ -34,7 +72,7 @@ export default function DashboardSidebar() {
             src={Profile}
             alt="avatar"
           />
-          <h4 className="mx-2 mt-2 font-medium ">Vedant Naidu</h4>
+          <h4 className="mx-2 mt-2 font-medium ">{CreatorName}</h4>
         </div>
 
         <div className="flex flex-col justify-between flex-1 mt-6">
@@ -116,47 +154,27 @@ export default function DashboardSidebar() {
               <span className="mx-4 font-medium">Profile</span>
             </NavLink>
 
-            {/* <a
+            <NavLink
+              style={({ isActive }) => (isActive ? activeStyle : undefined)}
+              to="/socialhub"
               className="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-purple-700 hover:bg-gray-100 dark:hover:bg-purple-800 dark:hover:text-gray-200 hover:text-gray-800"
-              href="#"
             >
-              <svg
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.3246 4.31731C10.751 2.5609 13.249 2.5609 13.6754 4.31731C13.9508 5.45193 15.2507 5.99038 16.2478 5.38285C17.7913 4.44239 19.5576 6.2087 18.6172 7.75218C18.0096 8.74925 18.5481 10.0492 19.6827 10.3246C21.4391 10.751 21.4391 13.249 19.6827 13.6754C18.5481 13.9508 18.0096 15.2507 18.6172 16.2478C19.5576 17.7913 17.7913 19.5576 16.2478 18.6172C15.2507 18.0096 13.9508 18.5481 13.6754 19.6827C13.249 21.4391 10.751 21.4391 10.3246 19.6827C10.0492 18.5481 8.74926 18.0096 7.75219 18.6172C6.2087 19.5576 4.44239 17.7913 5.38285 16.2478C5.99038 15.2507 5.45193 13.9508 4.31731 13.6754C2.5609 13.249 2.5609 10.751 4.31731 10.3246C5.45193 10.0492 5.99037 8.74926 5.38285 7.75218C4.44239 6.2087 6.2087 4.44239 7.75219 5.38285C8.74926 5.99037 10.0492 5.45193 10.3246 4.31731Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-
-              <span className="mx-4 font-medium">Settings</span>
-            </a> */}
+              <ConnectWithoutContactIcon />
+              <span className="mx-4 font-medium">Socialhub</span>
+            </NavLink>
           </nav>
         </div>
-        <a href="">
+        <button onClick={logout}>
           <div className="px-4 py-2 font-medium text-purple-800">
             <MeetingRoomIcon /> Logout
           </div>
-        </a>
+        </button>
       </aside>
 
       <div className="lg:hidden block w-full h-0  ">
         <section
           id="bottom-navigation"
-          className="block fixed inset-x-0 bottom-0 z-10 bg-[#ffffff80] shadow rounded-tr-xl rounded-tl-xl"
+          className="block fixed inset-x-0 bottom-0 z-10 bg-purple-200 rounded-tr-xl rounded-tl-xl"
         >
           <div id="tabs" className="flex justify-between">
             <NavLink
@@ -191,6 +209,16 @@ export default function DashboardSidebar() {
             >
               <PersonIcon />
               <span className="tab tab-explore block text-xs">Profile</span>
+            </NavLink>
+            <NavLink
+              style={({ isActive }) =>
+                isActive ? activeStyleMobile : undefined
+              }
+              to="/socialhub"
+              className="w-full focus:text-purple-800 hover:text-purple-800 hover:bg-purple-400/40  hover:rounded-lg m-2  hover:m-2 justify-center inline-block text-center pt-1 pb-1"
+            >
+              <ConnectWithoutContactIcon />
+              <span className="tab tab-explore block text-xs">SocialHub</span>
             </NavLink>
           </div>
         </section>

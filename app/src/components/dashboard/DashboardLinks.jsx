@@ -9,6 +9,7 @@ import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import { useEffect } from "react";
 import NoImage from "../../assets/Untitled design (3).png";
 import axios from "axios";
+import { useAuth } from "../../auth/auth";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 export default function DashboardLinks({ LinksList }) {
   let [modalOpen, setIsOpenModal] = useState(false);
@@ -23,7 +24,7 @@ export default function DashboardLinks({ LinksList }) {
 
   
   const [ModalData, setModalData] = useState([]);
-
+  const auth = useAuth();
   function closeModal() {
     setIsOpenModal(false);
   }
@@ -31,7 +32,7 @@ export default function DashboardLinks({ LinksList }) {
   function openUpdate(id) {
     setRowId(id)
     axios
-      .get(`http://localhost:3001/api/getUserLinks/naiduvedant@gmail.com/${id}`)
+      .get(`http://localhost:3001/api/getUserLinks/${auth.user}/${id}`)
       .then((response) => {
         setModalData(response.data[0].Link[0]);
         setnewLInkVisbility(response.data[0].Link[0].visible);
@@ -63,15 +64,12 @@ export default function DashboardLinks({ LinksList }) {
   async function updateclick(e) {
     e.preventDefault();
     const updateData = await axios
-      .post(
-        `http://localhost:3001/api/updateLink/naiduvedant@gmail.com/${rowId}`,
-        {
-          linkname:newLinkName,
-          linkurl:newLinkURL,
-          // linkimagename,
-          Visible:newLinkVisiblity,
-        }
-      )
+      .post(`http://localhost:3001/api/updateLink/${auth.user}/${rowId}`, {
+        linkname: newLinkName,
+        linkurl: newLinkURL,
+        // linkimagename,
+        Visible: newLinkVisiblity,
+      })
       .then((res) => {
         console.log("Updated");
       })
@@ -85,17 +83,16 @@ export default function DashboardLinks({ LinksList }) {
   }, []);
 
   function deleteLink(id) {
-    axios.post(
-      `http://localhost:3001/api/deleteLink/naiduvedant@gmail.com/${id}`
-    ) .then(res => {
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    axios
+      .post(`http://localhost:3001/api/deleteLink/${auth.user}/${id}`)
+      .then((res) => {})
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   return (
-    <div>
+    <div className="mb-24">
       <div className="pb-2 text-xl flex justify-center">
         <h1 className="my-5 py-1 px-3 bg-purple-300 text-purple-800 rounded-md w-fit">
           Roots
@@ -189,8 +186,7 @@ export default function DashboardLinks({ LinksList }) {
                                   backgroundImage: `url(${ModalData.linkImagName})`,
                                   backgroundSize: "cover",
                                   repeat: "no-repeat",
-                                  opacity:"0.5"
-                                  
+                                  opacity: "0.5",
                                 }}
                               >
                                 <div className="text-center">
@@ -199,11 +195,7 @@ export default function DashboardLinks({ LinksList }) {
                                   Change Image
                                 </div>
                               </span>
-                              <input
-                                type="file"
-                                className="hidden"
-                               
-                              />
+                              <input type="file" className="hidden" />
                             </label>
                           </div>
                         </div>

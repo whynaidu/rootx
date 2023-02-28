@@ -4,13 +4,16 @@ import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import { Toaster } from "react-hot-toast";
+import { useAuth } from "../../auth/auth";
 
 export default function AddNewLinkModal() {
+
   let [isOpen, setIsOpen] = useState(false);
   const [file, setfile] = useState(null);
   const [RootName, setRootName] = useState("");
   const [RootUrl, setRootUrl] = useState("");
   const [RootImage, setRootImage] = useState("");
+  const auth = useAuth();
 
   function closeModal() {
     setIsOpen(false);
@@ -39,7 +42,7 @@ export default function AddNewLinkModal() {
     formData.append("linkname", RootName);
     formData.append("linkurl", RootUrl);
     const addLink = await axios
-      .post(`http://localhost:3001/api/addlink`, {
+      .post(`http://localhost:3001/api/${auth.user}/addlink`, {
         linkname: RootName,
         linkurl: RootUrl
   

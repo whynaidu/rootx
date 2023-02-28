@@ -11,7 +11,10 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [authenticated, setauthenticated] = useState("");
 
+
   async function loginUser(event) {
+    console.log("my all state", email, password);
+    console.log("my context api 1", authenticated);
     event.preventDefault();
     const response = await axios.post(
       "http://localhost:3001/api/login",
@@ -27,20 +30,19 @@ export default function Login() {
     );
 
     const data = await response.data;
-
-    if (data.user) {
-      console.log(data.user)
-      localStorage.setItem("token", data.user);
-      setauthenticated(data.user);
-
-      auth.login(authenticated);
-      alert("Login successful"+ (auth.user));
-      navigate("/dashboard");
-    } else {
-      alert("Please check your username and password");
-    }
+    await auth.setUser(data.user.creatoremail);
+    await auth.setToken(data.token);
+  }
+  useEffect(() => {
+  if (auth.user && auth.token) {
+    localStorage.setItem("Name", auth.user);
+    localStorage.setItem("token", auth.token);
+    setauthenticated(auth.user);
+    navigate("/dashboard");
   }
 
+  
+}, [auth.user, navigate]);
   return (
     <>
       {console.log(authenticated)}
@@ -83,7 +85,7 @@ export default function Login() {
 
                     <div className="text-center lg:text-center">
                       <button
-                        type="submit"
+                        // type="submit"
                         className="w-fit rounded-xl border-0 bg-purple-300 text-purple-800 py-2 px-5 text-center hover:bg-purple-800 hover:text-white font-bold"
                       >
                         Login

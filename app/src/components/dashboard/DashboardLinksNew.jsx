@@ -9,12 +9,11 @@ import { useAuth } from "../../auth/auth";
 import { useEffect, useState } from "react";
 
 export default function DashboardLinksNew() {
-  //  const auth = useAuth()
-
-  const url = "http://localhost:3001/naiduvedant@gmail.com";
+  const auth = useAuth()
 
   const [userData, setuserData] = useState([]);
   const [creatorname, setCreatorName] = useState("")
+
   const [Profile, setProfile] = useState({
     name:"",
     username:"",
@@ -22,12 +21,20 @@ export default function DashboardLinksNew() {
     bio:""
     });
 
-  useEffect(() => {
 
+  useEffect(() => {
+    const NameValue = localStorage.getItem("Name");
+    const tokenValue = localStorage.getItem("token");
+    if (tokenValue && NameValue) {
+      auth.setUser(NameValue);
+      auth.setToken(tokenValue);
+    }
+
+    const url = `http://localhost:3001/${auth.user}`;
     async function fetchdata() {
-      const data = await axios.get(url)
-    setuserData(data.data);
-      setCreatorName(data.data[0].creatorname)
+      const data = await axios.get(url);
+      setuserData(data.data);
+      setCreatorName(data.data[0].creatorname);
       setProfile({
         name: data.data[0].creatorname,
         username: data.data[0].creatorUsername,
@@ -36,14 +43,14 @@ export default function DashboardLinksNew() {
       });
     }
     fetchdata();
-  }, []);
+  }, [auth.user]);
   return (
     <>
       <div>
         <Greetings userName={creatorname} />
         <ProfileCard profile={Profile} />
         {userData.map((elem, c) => (
-          <DashboardLinks key={c} LinksList={elem.Link} />
+        <DashboardLinks key={c} LinksList={elem.Link} />
         ))}
       </div>
     </>

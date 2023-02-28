@@ -4,13 +4,14 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import PersonIcon from "@mui/icons-material/Person";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../auth/auth";
+
 import toast, { Toaster } from "react-hot-toast";
 import ProfileImg from "../../assets/profileImage.png";
 import { useEffect, useState } from "react";
 
 export default function ProfileSettings() {
-  const email = "naiduvedant@gmail.com";
-  const url = `http://localhost:3001/${email}`;
+  const auth = useAuth();
   const [ImageData, setImageData] = useState(null);
   const [UpdateProfileImage, setUpdateProfileImage] = useState(null);
   const [ProfileImage, setnewProfileImage] = useState(null);
@@ -30,6 +31,16 @@ export default function ProfileSettings() {
   //           setProfileUsername(res.data[0].creatorUsername);
   //   });
   useEffect(() => {
+     const tokenValue = localStorage.getItem("Name");
+     if (tokenValue) {
+       auth.setUser(tokenValue);
+    }
+    
+
+    const url = auth.user
+      ? `http://localhost:3001/${auth.user}`
+      : "http://localhost:3001/";
+
     const getUsers = async () => {
       const getdata = await axios.get(url)
       const arrayData = getdata.data[0]
@@ -43,6 +54,7 @@ export default function ProfileSettings() {
 
     }; getUsers()
    
+
   })
 
   function handleProfileName(click) {
@@ -63,7 +75,7 @@ export default function ProfileSettings() {
   function updateSubmit(e) {
     e.preventDefault();
     axios
-      .post(`http://localhost:3001/api/profile/${email}`, {
+      .post(`http://localhost:3001/api/profile/${auth.user}`, {
         name: newProfileName===""? ProfileName: newProfileName,
         Logo: UpdateProfileImage === ""? ProfileImage:UpdateProfileImage,
         bio: newProfileBio === ""? ProfileBio:newProfileBio,

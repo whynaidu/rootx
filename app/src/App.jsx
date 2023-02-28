@@ -10,8 +10,9 @@ import Login from "./components/dashboard/Login";
 import SignUp from "./components/dashboard/SignUp";
 // import Guard from "./Guard";
 import { AuthProvider } from "./auth/auth";
-import { TestLogin } from "./components/dashboard/testlogin";
-import { TestProfile } from "./components/dashboard/testProfile";
+import SocialHub from "./components/dashboard/SocialLinks";
+import { RequireAuth } from "./auth/requireAuth";
+
 
 
 function App() {
@@ -21,15 +22,49 @@ function App() {
       <Routes>
         <Route exact path="/whynaidu" element={<CreatorLinks />} />
 
-        <Route path="/" element={<Dashboard />}>
-          <Route path="dashboard" element={<DashboardLinksNew />} />
-          <Route path="analytics" element={<Analytics />} />
-          <Route path="profile" element={<ProfileSettings />} />
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <Dashboard />
+            </RequireAuth>
+          }
+        >
+          <Route
+            path="dashboard"
+            element={
+              <RequireAuth>
+                <DashboardLinksNew />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="analytics"
+            element={
+              <RequireAuth>
+                <Analytics />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <RequireAuth>
+                <ProfileSettings />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="socialhub"
+            element={
+              <RequireAuth>
+                <SocialHub />
+              </RequireAuth>
+            }
+          />
         </Route>
         <Route path="*" element={<NotFound />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/testlogin" element={<TestLogin />} />
-        <Route path="/testProfile" element={<TestProfile />} />
 
         <Route path="/signup" element={<SignUp />} />
       </Routes>

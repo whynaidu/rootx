@@ -17,10 +17,11 @@ require("./db/config");
 //     res.send("This is the express server")
 // })
 
-app.post("/api/addlink", async (req, res) => {
+app.post("/api/:email/addlink", async (req, res) => {
+  const email= req.params.email
   const { linkname, linkurl } = req.body;
   const addlink = await ProfileSchema.findOneAndUpdate(
-    { creatoremail: "naiduvedant@gmail.com" },
+    { creatoremail: email },
 
     {
       $push: {
@@ -65,32 +66,7 @@ app.post("/api/adduser", async (req, res) => {
   }
 });
 
-// app.post("/api/login", async (req, res) => {
-//   const user = await ProfileSchema.findOne({ creatoremail: req.body.email });
 
-//   if (!user) {
-//     return res.json({ status: "error", error: "Invalid login" });
-//   }
-
-//   const isPasswordValid = await bcrypt.compare(
-//     req.body.password,
-//     user.password
-//   );
-
-//   if (isPasswordValid) {
-//     const token = jwt.sign(
-//       {
-//         name: user.creatorname,
-//         email: user.creatoremail,
-//       },
-//       "secret123"
-//     );
-
-//     return res.json({ status: "ok", user: token });
-//   } else {
-//     return res.json({ status: "error", user: false });
-//   }
-// });
 
 app.post("/api/updateLink/:email/:id", async (req, res) => {
   const linkId = req.params.id;
@@ -162,7 +138,7 @@ app.post("/api/login", async (req, res) => {
       "secret123"
     );
 
-    return res.json({ status: "ok", user: token });
+    return res.json({ status: "ok", user: user, token:token });
   } else {
     return res.json({ status: "error", user: false });
   }
@@ -208,6 +184,16 @@ app.get("/api/getUserLinks/:email/:linkid", async (req, res) => {
   res.send(data);
 });
 
+app.get("/api/getUserSocialLinks/:email/", async (req, res) => {
+  const email = req.params.email;
+  const linkId = req.params.linkid;
+  const data = await ProfileSchema.find(
+    {
+      creatoremail: email,
+    },
+  );
+  res.send(data);
+});
 
 
 app.post("/deleteall", async (req, res) => {

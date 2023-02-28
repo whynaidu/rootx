@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 
 export default function ProfileCard(props) {
-//   const url = "http://localhost:3001/whynaidu";
 
  const [profileData, setProfileData] = useState({});
 
@@ -16,12 +15,7 @@ export default function ProfileCard(props) {
   setProfileData(props.profile)
   })
 
-//   useEffect(() => {
-//     axios.get(url).then((res) => {
-//       setLinks(res.data);
-//       console.log(links);
-//     });
-//   }, []);
+
 
   return (
     <div>
