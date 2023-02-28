@@ -50,7 +50,7 @@ export default function DashboardLinks({ LinksList }) {
   }
 
   function linkVisbilityChange(e) {
-    setnewLInkVisbility(e);
+    setnewLInkVisbility(!newLinkVisiblity);
   }
   function linkNameChange(e) {
    setnewLInkName(e.target.value);
@@ -79,7 +79,7 @@ export default function DashboardLinks({ LinksList }) {
     
   }
 
-  
+
   useEffect(() => {
     setLinkData(LinksList);
   }, []);
@@ -96,7 +96,6 @@ export default function DashboardLinks({ LinksList }) {
 
   return (
     <div>
-      {console.log(newLinkVisiblity)}
       <div className="pb-2 text-xl flex justify-center">
         <h1 className="my-5 py-1 px-3 bg-purple-300 text-purple-800 rounded-md w-fit">
           Roots
@@ -109,15 +108,15 @@ export default function DashboardLinks({ LinksList }) {
           key={keys}
         >
           <div className="border-1 h-14 w-16 rounded-lg">
-            {element.logo === "" ? (
-              <img
-                className="border h-[inherit] object-cover rounded-lg max-h-full w-[inherit]	"
-                src={element.linkImagName}
-              />
-            ) : (
+            {element.linkImagName === null ? (
               <img
                 className="h-[inherit] object-cover border-[3px] border-purple-800 rounded-lg max-h-full w-[inherit]	"
                 src={NoImage}
+              />
+            ) : (
+              <img
+                className="border h-[inherit] object-cover rounded-lg max-h-full w-[inherit]	"
+                src={element.linkImagName}
               />
             )}
           </div>
@@ -184,7 +183,16 @@ export default function DashboardLinks({ LinksList }) {
                         <div className="w-1/2">
                           <div className="flex items-center justify-center h-full w-full">
                             <label className="cursor-pointer h-full w-full lg:mr-4 mr-3">
-                              <span className="flex items-center justify-center border-2 border-purple-800 h-full focus:outline-none text-purple-900 font-medium lg:text-md text-xs py-2 px-2 lg:py-2 lg:px-9  rounded-xl bg-purple-300 hover:bg-purple-800 hover:text-white hover:shadow-lg ">
+                              <span
+                                className="flex items-center justify-center border-2 border-purple-800 h-full focus:outline-none text-purple-900 font-medium lg:text-md text-xs py-2 px-2 lg:py-2 lg:px-9  rounded-xl bg-transparent hover:bg-purple-800 hover:text-white hover:shadow-lg "
+                                style={{
+                                  backgroundImage: `url(${ModalData.linkImagName})`,
+                                  backgroundSize: "cover",
+                                  repeat: "no-repeat",
+                                  opacity:"0.5"
+                                  
+                                }}
+                              >
                                 <div className="text-center">
                                   <InsertPhotoIcon fontSize="large" />
                                   <br />
@@ -194,8 +202,7 @@ export default function DashboardLinks({ LinksList }) {
                               <input
                                 type="file"
                                 className="hidden"
-                                multiple="multiple"
-                                accept="accept"
+                               
                               />
                             </label>
                           </div>
@@ -227,7 +234,7 @@ export default function DashboardLinks({ LinksList }) {
                     </div>
 
                     <div className="mt-4 flex justify-end">
-                      {ModalData.visible == true ? (
+                      {newLinkVisiblity == true ? (
                         <button
                           type="button"
                           className="inline-flex justify-center rounded-md border border-purple-900 px-2 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
@@ -256,7 +263,7 @@ export default function DashboardLinks({ LinksList }) {
                         type="submit"
                         className="inline-flex justify-center rounded-md border border-transparent bg-purple-300 px-4 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       >
-                        Add Root
+                        Update Root
                       </button>
                     </div>
                   </form>

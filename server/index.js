@@ -96,7 +96,6 @@ app.post("/api/updateLink/:email/:id", async (req, res) => {
   const linkId = req.params.id;
     const email = req.params.email;
 
-  console.log(linkId);
   const { linkname, linkurl, linkimagename, Visible } = req.body;
 
   const data = await ProfileSchema.findOneAndUpdate(
