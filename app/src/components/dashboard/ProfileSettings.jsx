@@ -22,40 +22,26 @@ export default function ProfileSettings() {
   const [newProfileBio, setnewProfileBio] = useState("");
   const [newProfileUsername, setnewProfileUsername] = useState("");
 
-  //  axios.get(url).then((res) => {
-  //     setImageData(res.data[0].logo);
-  //           setProfileName(res.data[0].creatorname);
-
-  //           setProfileBio(res.data[0].bio);
-
-  //           setProfileUsername(res.data[0].creatorUsername);
-  //   });
+     
   useEffect(() => {
-     const tokenValue = localStorage.getItem("Name");
-     if (tokenValue) {
-       auth.setUser(tokenValue);
+    const tokenValue = localStorage.getItem("Name");
+    if (tokenValue) {
+      auth.setUser(tokenValue);
     }
-    
-
-    const url = auth.user
-      ? `http://localhost:3001/${auth.user}`
-      : "http://localhost:3001/";
-
+    if (auth.user) {
+      getUsers();
+    }
+  }, [auth.user]);
+  
     const getUsers = async () => {
-      const getdata = await axios.get(url)
-      const arrayData = getdata.data[0]
-        setImageData(arrayData.logo);
-        setProfileName(arrayData.creatorname);
-
-        setProfileBio(arrayData.bio);
-
-        setProfileUsername(arrayData.creatorUsername);
-    
-
-    }; getUsers()
-   
-
-  })
+      const url = `http://localhost:3001/creator/${auth.user}`;
+      const getdata = await axios.get(url);
+      const arrayData = getdata.data[0];
+      setImageData(arrayData.logo);
+      setProfileName(arrayData.creatorname);
+      setProfileBio(arrayData.bio);
+      setProfileUsername(arrayData.creatorUsername);
+    };
 
   function handleProfileName(click) {
     setnewProfileName(click.target.value);
@@ -69,32 +55,54 @@ export default function ProfileSettings() {
 
   function handleProfileImage(click) {
     setUpdateProfileImage(click.target.files[0]);
+
     setnewProfileImage(URL.createObjectURL(click.target.files[0]));
   }
 
   function updateSubmit(e) {
     e.preventDefault();
+
+     const formData = new FormData();
+     formData.append(
+       "name", newProfileName === "" ? ProfileName : newProfileName
+     );
+     formData.append(
+       "profileImage",
+       UpdateProfileImage === "" ? ProfileImage : UpdateProfileImage
+     );
+    formData.append("bio", newProfileBio === "" ? ProfileBio : newProfileBio);
+     formData.append(
+       "username",
+       newProfileUsername === "" ? ProfileUsername : newProfileUsername
+     );
+    
     axios
-      .post(`http://localhost:3001/api/profile/${auth.user}`, {
-        name: newProfileName===""? ProfileName: newProfileName,
-        Logo: UpdateProfileImage === ""? ProfileImage:UpdateProfileImage,
-        bio: newProfileBio === ""? ProfileBio:newProfileBio,
-        username: newProfileUsername === ""? ProfileUsername: newProfileUsername,
-      })
+      .post(
+        `http://localhost:3001/api/profile/${auth.user}`,
+        formData
+       
+      )
       .then((resposne) => {
-        toast.success(resposne.data);
-        console.log(resposne)
-     
+             setImageData(resposne.data.logo);
+             setProfileName(resposne.data.creatorname);
+             setProfileBio(resposne.data.bio);
+        setProfileUsername(resposne.data.creatorUsername);
+            setnewProfileImage(null);
+
+        toast.success("Updated Profile");
+        console.log(resposne);
       })
       .catch((err) => {
-         toast.error(err);
+        toast.error(err);
         console.log(err);
       });
   }
 
   return (
     <>
-      {/* <Toaster position="top-right" /> */}
+      <Toaster position="top-right" />
+      {/* {console.log("hii")} */}
+
       <div>
         <PageHeader title={"Profile"} Icon={<PersonIcon />} />
 
@@ -106,11 +114,7 @@ export default function ProfileSettings() {
                 <div className="flex flex-col ">
                   <div className="flex flex-col sm:flex-row items-center"></div>
                   <div className="">
-                    <form
-                      onSubmit={updateSubmit}
-                      method="post"
-                      encType="mutipart/form-data"
-                    >
+                    <form onSubmit={updateSubmit} encType="mutipart/form-data">
                       <div className="form">
                         <div className="mb-3">
                           <label className="text-lg font-semibold text-gray-600 py-2">
@@ -129,7 +133,8 @@ export default function ProfileSettings() {
                               ) : (
                                 <img
                                   className="lg:w-20 lg:h-20 w-16 h-16 mr-4 object-cover"
-                                  src={ImageData}
+                                  // src={ImageData}
+                                  src={`../../../public/profileImage/${ImageData}`}
                                 />
                               )}
                             </div>

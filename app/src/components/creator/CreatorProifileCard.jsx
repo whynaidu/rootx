@@ -2,12 +2,15 @@ import React from 'react'
 import Image from "../../assets/profileImage.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+
 
 
 
 export default function CreatorProifileCard() {
 
- const url = "http://localhost:3001/naiduvedant@gmail.com";
+ const username = useParams();
+ const url = `http://localhost:3001/${username.username}`;
 
  const [creator, setCreator] = useState([]);
 
@@ -31,14 +34,10 @@ export default function CreatorProifileCard() {
             ) : (
               <img
                 className="absolute ring-1 w-20 ring-blue-500 rounded-full h-[inherit]"
-                src={creator.logo}
+                src={`../../../public/profileImage/${creator.logo}`}
               />
             )}
 
-            <img
-              className="absolute ring-1 ring-blue-500 rounded-full h-[inherit]"
-              src={Image}
-            />
           </div>
           <div className="text-center">
             {creator.creatorname === null ? (

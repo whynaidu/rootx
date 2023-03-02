@@ -15,39 +15,46 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAuth } from "../../auth/auth";
-import { faSnapchat } from "@fortawesome/free-brands-svg-icons"; 
-import { faTwitch } from "@fortawesome/free-brands-svg-icons"; 
-import { faSpotify } from "@fortawesome/free-brands-svg-icons"; 
-import { faTiktok } from "@fortawesome/free-brands-svg-icons"; 
-
+import { faSnapchat } from "@fortawesome/free-brands-svg-icons";
+import { faTwitch } from "@fortawesome/free-brands-svg-icons";
+import { faSpotify } from "@fortawesome/free-brands-svg-icons";
+import { faTiktok } from "@fortawesome/free-brands-svg-icons";
 
 import { faDribbble } from "@fortawesome/free-brands-svg-icons";
 
 export default function SocialHub() {
-  const [socialLInks, setsocialLInks] = useState([])
-  
+  const [socialLinks, setSocialLinks] = useState([]);
+  const [facebook, SetFacebook] = useState()
+
 
   const auth = useAuth();
-
-  useEffect(()=>{
-     const tokenValue = localStorage.getItem("Name");
-     if (tokenValue) {
-       auth.setUser(tokenValue);
-     }
+  useEffect(() => {
+    const tokenValue = localStorage.getItem("Name");
+    if (tokenValue) {
+      auth.setUser(tokenValue);
+    }
     async function getSocial() {
-      const links = await axios.get(
+      const response = await axios.get(
         `http://localhost:3001/api/getUserSocialLinks/${auth.user}/`
-      ).then((res) => {
-        
-        setsocialLInks(res.data[0].SocialLinks);
-      })
-    }getSocial();
+      );
+      if (response.data && response.data.length > 0) {
+        setSocialLinks(response.data[0].SocialLinks);
+      }
+    }
+    getSocial();
+  }, [auth.user, auth.setUser]);
 
-  }, [auth.user])
-  
+
+  async function SocilaUpdate() {
+    const update = await axios.post(`http://localhost:3001/api/`, {
+      facebook: facebook,
+    });
+  }
 
 
-  
+
+
+
   return (
     <>
       {/* <Toaster position="top-right" /> */}
@@ -63,7 +70,7 @@ export default function SocialHub() {
                   <div className="flex flex-col sm:flex-row items-center"></div>
                   <div className="">
                     <form
-                      // onSubmit={updateSubmit}
+                      onSubmit={SocilaUpdate}
                       method="post"
                       encType="mutipart/form-data"
                     >
@@ -82,8 +89,8 @@ export default function SocialHub() {
                             </div>
                             <input
                               type="text"
-                              //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.facebook}
+                              onChange={(e) => SetFacebook(e.target.value)}
+                              defaultValue={socialLinks.facebook}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://www.facebook.com/username/"
                             />
@@ -115,7 +122,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.instagram}
+                              defaultValue={socialLinks.instagram}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://twitter.com/username"
                             />
@@ -131,7 +138,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.linkedin}
+                              defaultValue={socialLinks.linkedin}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://www.linkedin.com/in/username"
                             />
@@ -147,7 +154,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.tikok}
+                              defaultValue={socialLinks.tikok}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow  lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://www.tiktok.com/@username"
                             />
@@ -163,7 +170,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.spotify}
+                              defaultValue={socialLinks.spotify}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://open.spotify.com/user/userID"
                             />
@@ -179,7 +186,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.telegram}
+                              defaultValue={socialLinks.telegram}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://t.me/username"
                             />
@@ -195,7 +202,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.youtube}
+                              defaultValue={socialLinks.youtube}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://www.youtube.com/@username"
                             />
@@ -211,7 +218,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.dribble}
+                              defaultValue={socialLinks.dribble}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://dribbble.com/username"
                             />
@@ -227,7 +234,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.snapchat}
+                              defaultValue={socialLinks.snapchat}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://t.snapchat.com/ID"
                             />
@@ -243,7 +250,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.pinterest}
+                              defaultValue={socialLinks.pinterest}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://in.pinterest.com/username/"
                             />
@@ -259,7 +266,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.twitch}
+                              defaultValue={socialLinks.twitch}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://www.twitch.tv/username"
                             />
@@ -275,7 +282,7 @@ export default function SocialHub() {
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLInks.whatsapp}
+                              defaultValue={socialLinks.whatsapp}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://wa.me/XXXXXXXXXX"
                             />

@@ -4,13 +4,29 @@ import Links from "./Links";
 import { useEffect, useState } from "react";
 import SociaLinks from "./SociaLinks";
 import axios from "axios";
+import { useParams } from "react-router";
+
 import BrandLink from "./BrandLink";
 
 export default function CreatorLinks() {
-  const url = "http://localhost:3001/naiduvedant@gmail.com";
+  const username =useParams()
+  const url = `http://localhost:3001/${username.username}`;
+
 
   const [links, setLinks] = useState([]);
   useEffect(() => {
+
+    const fetchCreatorVisitedData = async () => {
+      try {
+        const response = await axios.post(
+          `http://localhost:3001/api/creatorVisited/${username.username}`
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCreatorVisitedData();
+
     axios.get(url).then((res) => {
       setLinks(res.data);
     });
@@ -20,7 +36,11 @@ export default function CreatorLinks() {
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>
         <CreatorProifileCard />
         {links.map((element, c) => (
-          <Links key={c} links={element.Link} />
+          <Links
+            key={c}
+            email={element.creatoremail}
+            links={element.Link.reverse()}
+          />
         ))}
         {links.map((social, w) => (
           <SociaLinks key={w} social={social.SocialLinks} />

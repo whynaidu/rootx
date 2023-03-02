@@ -9,12 +9,8 @@ export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [authenticated, setauthenticated] = useState("");
-
 
   async function loginUser(event) {
-    console.log("my all state", email, password);
-    console.log("my context api 1", authenticated);
     event.preventDefault();
     const response = await axios.post(
       "http://localhost:3001/api/login",
@@ -33,19 +29,15 @@ export default function Login() {
     await auth.setUser(data.user.creatoremail);
     await auth.setToken(data.token);
   }
-  useEffect(() => {
-  if (auth.user && auth.token) {
-    localStorage.setItem("Name", auth.user);
-    localStorage.setItem("token", auth.token);
-    setauthenticated(auth.user);
-    navigate("/dashboard");
-  }
-
-  
-}, [auth.user, navigate]);
+ useEffect(() => {
+   if (auth.user && auth.token) {
+     localStorage.setItem("Name", auth.user);
+     localStorage.setItem("token", auth.token);
+     navigate("/dashboard");
+   }
+ }, [auth.user, auth.token, navigate]);
   return (
     <>
-      {console.log(authenticated)}
       <div>
         <Toaster position="top-right" reverseOrder={false} />
         <div className="loginPage justify-center w-full bg-cover h-[100vh] flex items-center">

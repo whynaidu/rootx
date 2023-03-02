@@ -9,50 +9,63 @@ import { useAuth } from "../../auth/auth";
 import { useEffect, useState } from "react";
 
 export default function DashboardLinksNew() {
-  const auth = useAuth()
+  const auth = useAuth();
+    const url = `http://localhost:3001/creator/${auth.user}`;
 
-  const [userData, setuserData] = useState([]);
-  const [creatorname, setCreatorName] = useState("")
-
-  const [Profile, setProfile] = useState({
-    name:"",
-    username:"",
-    logo:"",
-    bio:""
-    });
-
+  const [userData, setUserData] = useState([]);
+  const [creatorName, setCreatorName] = useState("");
+  const [profile, setProfile] = useState({
+    name: "",
+    username: "",
+    logo: "",
+    bio: "",
+  });
 
   useEffect(() => {
-    const NameValue = localStorage.getItem("Name");
+    const nameValue = localStorage.getItem("Name");
     const tokenValue = localStorage.getItem("token");
-    if (tokenValue && NameValue) {
-      auth.setUser(NameValue);
+    if (tokenValue && nameValue) {
+      auth.setUser(nameValue);
       auth.setToken(tokenValue);
     }
 
-    const url = `http://localhost:3001/${auth.user}`;
-    async function fetchdata() {
-      const data = await axios.get(url);
-      setuserData(data.data);
-      setCreatorName(data.data[0].creatorname);
-      setProfile({
-        name: data.data[0].creatorname,
-        username: data.data[0].creatorUsername,
-        logo: data.data[0].logo,
-        bio: data.data[0].creatorname,
-      });
+    if (auth.user) {
+    fetchData();
     }
-    fetchdata();
+    fetchData();
   }, [auth.user]);
+
+
+ async function fetchData() {
+   try {
+     const response = await axios.get(url);
+     if (response && response.data && response.data.length > 0) {
+       setUserData(response.data);
+       const creatorData = response.data[0];
+       setCreatorName(creatorData.creatorname);
+       setProfile({
+         name: creatorData.creatorname,
+         username: creatorData.creatorUsername,
+         logo: creatorData.logo,
+         bio: creatorData.bio,
+       });
+     } else {
+       console.log("No data returned from server.");
+     }
+   } catch (error) {
+     console.error(error);
+   }
+ }
+
   return (
-    <>
-      <div>
-        <Greetings userName={creatorname} />
-        <ProfileCard profile={Profile} />
-        {userData.map((elem, c) => (
+    <div>
+      <Greetings userName={creatorName} />
+      <ProfileCard profile={profile} />
+      <Tools ToolData={profile.username} />
+      {userData.map((elem, c) => (
         <DashboardLinks key={c} LinksList={elem.Link} />
-        ))}
-      </div>
-    </>
+      ))}
+    </div>
   );
 }
+

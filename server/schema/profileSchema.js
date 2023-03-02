@@ -27,12 +27,7 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Pageviews: [
-    {
-      type: Date,
-      default: Date.now(),
-    },
-  ],
+  Pageviews: [],
 
   Link: [
     {
@@ -56,12 +51,7 @@ const ProfileSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
       },
-      views: {
-        viewsAt: {
-          type: Date,
-          default: Date.now(),
-        },
-      },
+      views: [],
     },
   ],
   SocialLinks: {

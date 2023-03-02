@@ -6,58 +6,63 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import { NavLink } from "react-router-dom";
 import Profile from "../../assets/pixel-5a-renders-leaked.jpg";
 import { useAuth } from "../../auth/auth";
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
 
-
 export default function DashboardSidebar() {
-
   const auth = useAuth();
-  const [CreatorName, setCreatorName] = useState()
+  const [CreatorName, setCreatorName] = useState();
+  const [CreatorImage, setCreatorImage] = useState();
+
   const navigate = useNavigate();
+  const url = `http://localhost:3001/creator/${auth.user}`;
 
+  useEffect(() => {
+    const tokenValue = localStorage.getItem("Name");
+    if (tokenValue) {
+      auth.setUser(tokenValue);
+    }
 
+    if (auth.user) {
+      getUsers();
+    }
+  }, [auth.user, url]);
+  
+  const getUsers = async () => {
+    try {
+      const response = await axios.get(url);
+      if (response && response.data && response.data.length > 0) {
+        setCreatorName(response.data[0].creatorname);
+        setCreatorImage(response.data[0].logo);
+      } else {
+        console.log("No data returned from server.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-   useEffect(() => {
-     const tokenValue = localStorage.getItem("Name");
-     if (tokenValue) {
-       auth.setUser(tokenValue);
-       
-     }
-
-     const url = auth.user
-       ? `http://localhost:3001/${auth.user}`
-       : "http://localhost:3001/";  
-
-     const getUsers = async () => {
-       const getdata = await axios.get(url);
-      setCreatorName(getdata.data[0].creatorname);
-     };
-     getUsers();
-   },[auth.user]);
-
-function logout()
-{
-  auth.setUser(null)
-  auth.setToken(null);
-  localStorage.removeItem("Name")
-  console.log(auth)
-   navigate("/login");
-}
-     let activeStyle = {
-       background: "rgb(107 33 168)",
-       color: "white",
-     };
-
-  let activeStyleMobile = {
-     margin:"10px",
-     borderRadius:"10px",
+  function logout() {
+    auth.setUser(null);
+    auth.setToken(null);
+    localStorage.removeItem("Name");
+    console.log(auth);
+    navigate("/login");
+  }
+   let activeStyle = {
      background: "rgb(107 33 168)",
      color: "white",
    };
+
+  let activeStyleMobile = {
+    margin: "10px",
+    borderRadius: "10px",
+    background: "rgb(107 33 168)",
+    color: "white",
+  };
 
   return (
     <div>
@@ -69,7 +74,7 @@ function logout()
         <div className="flex flex-col items-center mt-6 mx-2">
           <img
             className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
-            src={Profile}
+            src={`../../../public/profileImage/${CreatorImage}`}
             alt="avatar"
           />
           <h4 className="mx-2 mt-2 font-medium ">{CreatorName}</h4>

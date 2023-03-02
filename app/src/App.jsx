@@ -20,14 +20,14 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route exact path="/whynaidu" element={<CreatorLinks />} />
+        <Route exact path="/:username" element={<CreatorLinks />} />
 
         <Route
           path="/"
           element={
             <RequireAuth>
               <Dashboard />
-            </RequireAuth>
+             </RequireAuth>
           }
         >
           <Route
@@ -43,7 +43,7 @@ function App() {
             element={
               <RequireAuth>
                 <Analytics />
-              </RequireAuth>
+            </RequireAuth>
             }
           />
           <Route

@@ -24,19 +24,20 @@ export default function ProfileCard(props) {
           <div className="pulseLoader2 relative h-full"></div>
 
           <img
-            className="absolute ring-2 ring-purple-500 rounded-full h-[inherit]"
-            src={Image}
+            className="absolute ring-2 ring-purple-500 rounded-full w-16 h-16"
+            src={`../../../public/profileImage/${profileData.logo}`}
           />
         </div>
         <div className="px-4 w-full">
           <div className="flex flex-wrap">
-          <h1 className="text-2xl text-purple-800 font-bold mr-3">
-            {profileData.name}
-          </h1>
-          <span className="lg:text-lg text-slate-400 text-lg">(@{profileData.username})</span>
-          
+            <h1 className="text-2xl text-purple-800 font-bold mr-3">
+              {profileData.name}
+            </h1>
+            <span className="lg:text-lg text-slate-400 text-lg">
+              ({profileData.username})
+            </span>
           </div>
-          <p className="font-sans text-[12px] font-thin	">{profileData.bio}</p>
+          <p className="font-sans text-[16px] font-thin	">{profileData.bio}</p>
         </div>
         <div>
           <Link to="/profile">
