@@ -3,11 +3,14 @@ import Image from "../../assets/profileImage.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
+
 
 
 
 
 export default function CreatorProifileCard() {
+  const navigate = useNavigate();
 
  const username = useParams();
  const url = `http://localhost:3001/${username.username}`;
@@ -15,9 +18,24 @@ export default function CreatorProifileCard() {
  const [creator, setCreator] = useState([]);
 
  useEffect(() => {
-   axios.get(url).then((res) => {
-     setCreator(res.data[0]);
-   });
+async function fetchCreator() {
+  try {
+    const res = await axios.get(url);
+    setCreator(res.data[0]);
+    
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      navigate("/notfound");
+    } else {
+      console.log(error);
+      // Handle other errors here
+    }
+  }
+}
+
+ // Call the function to fetch the creator data
+ fetchCreator();
+
  }, []);
 
   return (

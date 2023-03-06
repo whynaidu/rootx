@@ -285,9 +285,11 @@ app.post(
 );
 
 app.post("/api/login", async (req, res) => {
+  
   const user = await ProfileSchema.findOne({
-    email: req.body.email,
+    creatoremail: req.body.email,
   });
+  console.log(user.creatorname)
 
   if (!user) {
     return { status: "error", error: "Invalid login" };
@@ -301,17 +303,64 @@ app.post("/api/login", async (req, res) => {
   if (isPasswordValid) {
     const token = jwt.sign(
       {
-        name: user.name,
-        email: user.email,
+        id: user._id,
+        name: user.creatorname,
+        email: user.creatoremail,
       },
       "secret123"
     );
 
-    return res.json({ status: "ok", user: user, token: token });
+    return res.json({ status: "200", user: user, token: token });
   } else {
-    return res.json({ status: "error", user: false });
+    return res.json({ status: "401", user: false });
   }
 });
+
+// app.post("/api/login", async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     // Validate email and password inputs
+//     if (!email || !password) {
+//       return res.status(400).json({ error: "Email and password are required" });
+//     }
+
+//     const user = await ProfileSchema.findOne({ creatoremail: email });
+
+//     // Check if user with provided email exists
+//     if (!user) {
+//       return res.status(401).json({ error: "Invalid login" });
+//     }
+
+//     // Check if password is correct
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+
+//     if (!isPasswordValid) {
+//       return res.status(401).json({ error: "Invalid login" });
+//     }
+
+//     // Generate JWT token
+//     const token = jwt.sign(
+//       {
+//         id: user._id,
+//         name: user.name,
+//         email: user.email,
+//       },
+//       process.env.JWT_SECRET,
+//       {
+//         expiresIn: "1h", // Token expiration time
+//       }
+//     );
+
+//     // Return success response with token and user data
+//     res.status(200).json({ token, user });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
+
+
 
 app.post("/api/deleteLink/:username/:id", async (req, res) => {
   try {
@@ -352,16 +401,39 @@ app.post("/api/deleteLink/:email/", async (req, res) => {
 });
 
 app.get("/creator/:email", async (req, res) => {
-  const mail = req.params.email;
-  const data = await ProfileSchema.find({ creatoremail: mail });
-  res.send(data);
+  try {
+    const email = req.params.email;
+    const data = await ProfileSchema.find({ creatoremail: email });
+
+    if (data.length === 0) {
+      return res.status(404).send(`No user found with email: ${email}`);
+    } else {
+      res.send(data);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(`Failed to retrieve data for email: ${email}`);
+  }
 });
 
+
 app.get("/:username", async (req, res) => {
-  const username = req.params.username;
-  const data = await ProfileSchema.find({ creatorUsername: username });
-  res.send(data);
+  try {
+    const username = req.params.username;
+    const data = await ProfileSchema.find({ creatorUsername: username });
+
+    if (data.length === 0) {
+      return res.status(404).send("User Not Found");
+    } else {
+      res.send(data);
+    }
+
+  } catch (error) {
+    res.status(500).send("User Not Found");
+  }
 });
+
+
 
 app.get("/api/getUserLinks/:email/:linkid", async (req, res) => {
   const email = req.params.email;
@@ -389,7 +461,7 @@ app.get("/api/getUserSocialLinks/:email/", async (req, res) => {
 
 app.post("/deleteall", async (req, res) => {
   const data = await ProfileSchema.deleteMany();
-  console.log(data);
+
   res.send(data);
 });
 

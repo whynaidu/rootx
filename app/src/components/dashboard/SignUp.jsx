@@ -1,42 +1,101 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
-  let [Email, setEmail] = useState("");
-
-  let [password, setPassword] = useState("");
-
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userExist, setuserExist] = useState(false);
+  const [emailExist, setemailExist] = useState(false);
 
-  const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setEmail(email);
-  };
+  const [cpassword, setCPassword] = useState("");
+  const [passwordMatch, setpasswordMatch] = useState(false);
 
-  const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-  };
+  const url = "http://localhost:3001/api/adduser";
 
-  function LoginSubmit(event) {
-    // alert("dsfsdf")
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append("email", Email);
-    formData.append("password", password);
-    // axios
-    //   .post(`http://localhost:3001/upload/`, formData)
-    //   .then((res) => {
+  function handleCPassword(e) {
+    setCPassword(e.target.value);
+  }
 
-    //   })
-    //   .catch((err) => {
-    //     console.log(res.data);
-    //   });
+  useEffect(() => {
+    if (cpassword != password) {
+      setpasswordMatch(false);
+    } else {
+      setpasswordMatch(true);
+    }
+  }, [handleCPassword]);
+
+  async function chechUsername(e) {
+    setUsername(e.target.value);
+    console.log(e.target.value);
+    const checkurl = `http://localhost:3001/${e.target.value}`;
+    try {
+      const response = await axios.get(checkurl);
+      const data = response.data;
+      console.log(data[0].creatoremail);
+      setuserExist(true);
+      // Do something with the response data
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        setuserExist(false);
+      }
+      console.error(error.response.data);
+    }
+  }
+
+  async function chechEmail(e) {
+    setEmail(e.target.value);
+    console.log(e.target.value);
+
+    const checkEmailurl = `http://localhost:3001/creator/${e.target.value}`;
+
+    try {
+      const response = await axios.get(checkEmailurl);
+      const data = response.data;
+
+      if (data[0] && data[0].creatoremail === e.target.value) {
+        setemailExist(true);
+        // Do something with the response data
+      } else {
+        setemailExist(false);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        setemailExist(false);
+      }
+      console.error(error.response);
+    }
+  }
+
+  async function SigninSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(url, {
+        username: username,
+        password: cpassword,
+        creatoremail: email,
+      });
+      toast.success("SignUp Sucessfull");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+      console.log(response);
+
+      // Handle response here
+    } catch (error) {
+      console.error(error);
+      // Handle error here
+    }
   }
 
   return (
     <div>
+      <Toaster position="top-right" />
+
       <div className="loginPage justify-center w-full bg-cover h-[100vh] flex items-center">
         <div className="bg-[#ffffff80]  lg:w-1/3 rounded-xl m-4 p-6 mt-auto mb-auto shadow-lg">
           <div className="lg:px-6 px-2 text-gray-800">
@@ -45,7 +104,7 @@ export default function SignUp() {
                 <h1 className="text-center text-3xl font-medium my-5">
                   Create an Account{" "}
                 </h1>
-                <form onSubmit={LoginSubmit}>
+                <form onSubmit={SigninSubmit}>
                   <div className="flex-wrap items-stretch w-full mb-4 relative">
                     <label className="mb-4 text-xl">Username</label>
                     <div className="flex mt-2">
@@ -54,10 +113,18 @@ export default function SignUp() {
                       </span>
                       <input
                         type="text"
+                        required
                         className="flex-grow flex-auto w-px border-l-0  border-purple-800  bg-transparent rounded-lg rounded-l-none relative focus:border-blue focus:shadow py-3 lg:py-3"
                         placeholder=""
+                        onBlur={chechUsername}
                       />
                     </div>
+                    {username &&
+                      (userExist === true ? (
+                        <p className="text-red-500">User Found</p>
+                      ) : (
+                        <p className="text-green-500">Username Available</p>
+                      ))}{" "}
                   </div>
                   <div className="mb-3">
                     <label className="mb-4 text-xl">Email</label>
@@ -69,8 +136,14 @@ export default function SignUp() {
                     transition-colors duration-200 focus:outline-none 
                     md:py-4 md:pr-4 lg:py-3 lg:pr-4"
                       placeholder="Email"
-                      onChange={onChangeEmail}
+                      onBlur={chechEmail}
                     />
+                    {email &&
+                      (emailExist === true ? (
+                        <p className="text-red-500">Email Found</p>
+                      ) : (
+                        <p className="text-green-500">Email Available</p>
+                      ))}{" "}
                   </div>
 
                   <div className="mb-6">
@@ -83,7 +156,7 @@ export default function SignUp() {
                     transition-colors duration-200 focus:outline-none 
                     md:py-4 md:pr-4 lg:py-3 lg:pr-4"
                       placeholder="Password"
-                      onChange={onChangePassword}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                   <div className="mb-6">
@@ -96,18 +169,33 @@ export default function SignUp() {
                     transition-colors duration-200 focus:outline-none 
                     md:py-4 md:pr-4 lg:py-3 lg:pr-4"
                       placeholder="Confirm Password"
-                      onChange={onChangePassword}
+                      onChange={handleCPassword}
                     />
+
+                    {cpassword &&
+                      (passwordMatch === true ? (
+                        <p className="text-green-500">Password matched</p>
+                      ) : (
+                        <p className="text-red-500">Password not matched</p>
+                      ))}
                   </div>
 
                   <div className="text-center lg:text-center">
-                    <button
-                      type="submit"
-                      className="w-fit rounded-xl border-0 bg-purple-300 text-purple-800 py-2 px-5 text-center hover:bg-purple-800 hover:text-white font-bold"
-                    >
-                      Signup
-                    </button>
-
+                    {!userExist && passwordMatch ? (
+                      <button
+                        type="submit"
+                        className="w-fit rounded-xl border-0 bg-purple-300 text-purple-800 py-2 px-5 text-center hover:bg-purple-800 hover:text-white font-bold"
+                      >
+                        Signup
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="w-fit rounded-xl border-0 bg-purple-200 text-purple-300 py-2 px-5 text-center cursor-auto"
+                      >
+                        Signup
+                      </button>
+                    )}
                     <div className="flex items-end lg:justify-end justify-center">
                       <a
                         href="#!"
@@ -119,13 +207,13 @@ export default function SignUp() {
                     <div>
                       <p className="mt-2 mb-0 pt-3 text-md font-medium ">
                         Already have an account?
-                        <a
-                          href="#!"
+                        <Link
+                          to="/login"
                           className="text-purple-800  text-lg font-bold hover:text-black"
                         >
                           <br />
                           Login
-                        </a>
+                        </Link>
                       </p>
                     </div>
                   </div>

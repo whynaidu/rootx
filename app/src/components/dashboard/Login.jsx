@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../../auth/auth";
 
 export default function Login() {
@@ -10,13 +10,35 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function loginUser(event) {
-    event.preventDefault();
+  // async function loginUser(event) {
+  //   event.preventDefault();
+  //   const response = await axios.post(
+  //     "http://localhost:3001/api/login",
+  //     {
+  //       email,
+  //       password,
+  //     },
+  //     {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
+
+  //   const data = await response.data;
+  //   console.log(data);
+  //   await auth.setUser(data.user.creatoremail);
+  //   await auth.setToken(data.token);
+  // }
+async function loginUser(event) {
+  event.preventDefault();
+
+  try {
     const response = await axios.post(
       "http://localhost:3001/api/login",
       {
-        email,
-        password,
+        email: email,
+        password: password,
       },
       {
         headers: {
@@ -26,20 +48,35 @@ export default function Login() {
     );
 
     const data = await response.data;
+    console.log(data);
     await auth.setUser(data.user.creatoremail);
     await auth.setToken(data.token);
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      toast.error("Invalid login details.");
+    } else {
+      toast.error("An error occurred while logging in.");
+    }
   }
- useEffect(() => {
-   if (auth.user && auth.token) {
-     localStorage.setItem("Name", auth.user);
-     localStorage.setItem("token", auth.token);
-     navigate("/dashboard");
-   }
- }, [auth.user, auth.token, navigate]);
+}
+
+useEffect(() => {
+  if (auth.user && auth.token) {
+    console.log(auth.user);
+    localStorage.setItem("Name", auth.user);
+    localStorage.setItem("token", auth.token);
+    toast.success("Login Successful");
+
+    const DELAY_TIME_MS = 1800;
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, DELAY_TIME_MS);
+  }
+}, [auth.user, auth.token, navigate]);
   return (
     <>
       <div>
-        <Toaster position="top-right" reverseOrder={false} />
+        <Toaster position="top-right" />
         <div className="loginPage justify-center w-full bg-cover h-[100vh] flex items-center">
           <div className="bg-[#ffffff80]  lg:w-1/3 rounded-xl m-4 p-6 mt-auto mb-auto shadow-lg">
             <div className="lg:px-6 px-2 text-gray-800">
@@ -94,13 +131,13 @@ export default function Login() {
                       <div>
                         <p className="mt-2 mb-0 pt-3 text-md font-medium ">
                           Don't have an account?
-                          <a
-                            href="#!"
+                          <Link
+                            to="/signup"
                             className="text-purple-800 hover:text-black"
                           >
                             <br />
                             Create Account
-                          </a>
+                          </Link>
                         </p>
                       </div>
                     </div>

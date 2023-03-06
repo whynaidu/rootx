@@ -15,7 +15,6 @@ export default function Analytics() {
       const response = await axios.get(
         `http://localhost:3001/api/topLinks/naiduvedant@gmail.com`
       );
-      console.log(response.data.PageviesCount);
       setpageViews(response.data.PageviesCount);
             setlinkViews(response.data.totalCount);
 

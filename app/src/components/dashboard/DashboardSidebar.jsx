@@ -9,6 +9,7 @@ import { useAuth } from "../../auth/auth";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ProfileImg from "../../assets/profileImage.png";
 
 import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
 
@@ -26,11 +27,15 @@ export default function DashboardSidebar() {
       auth.setUser(tokenValue);
     }
 
-    if (auth.user) {
-      getUsers();
-    }
+   if (auth.user) {
+     getUsers();
+     const intervalId = setInterval(() => {
+       getUsers();
+     }, 5000); // call getUsers every 10 seconds
+     return () => clearInterval(intervalId); // cleanup function to clear interval
+   }
   }, [auth.user, url]);
-  
+
   const getUsers = async () => {
     try {
       const response = await axios.get(url);
@@ -49,13 +54,14 @@ export default function DashboardSidebar() {
     auth.setUser(null);
     auth.setToken(null);
     localStorage.removeItem("Name");
-    console.log(auth);
+    localStorage.removeItem("token");
+
     navigate("/login");
   }
-   let activeStyle = {
-     background: "rgb(107 33 168)",
-     color: "white",
-   };
+  let activeStyle = {
+    background: "rgb(107 33 168)",
+    color: "white",
+  };
 
   let activeStyleMobile = {
     margin: "10px",
@@ -72,11 +78,19 @@ export default function DashboardSidebar() {
         </a>
 
         <div className="flex flex-col items-center mt-6 mx-2">
-          <img
-            className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
-            src={`../../../public/profileImage/${CreatorImage}`}
-            alt="avatar"
-          />
+          {CreatorImage === null ? (
+            <img
+              className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
+              src={ProfileImg}
+              alt="avatar"
+            />
+          ) : (
+            <img
+              className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
+              src={`../../../public/profileImage/${CreatorImage}`}
+              alt="avatar"
+            />
+          )}
           <h4 className="mx-2 mt-2 font-medium ">{CreatorName}</h4>
         </div>
 

@@ -26,10 +26,21 @@ export default function CreatorLinks() {
       }
     };
     fetchCreatorVisitedData();
+async function fetchLinks() {
+  try {
+    const response = await axios.get(url);
 
-    axios.get(url).then((res) => {
-      setLinks(res.data);
-    });
+    
+    setLinks(response.data);
+  } catch (error) {
+  
+    console.log(error);
+    // handle the error here
+  }
+}
+
+fetchLinks();
+
   }, []);
   return (
     <>

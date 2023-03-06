@@ -7,6 +7,7 @@ import axios from "axios";
 
 import { useAuth } from "../../auth/auth";
 import { useEffect, useState } from "react";
+import DashboardSidebar from "./DashboardSidebar";
 
 export default function DashboardLinksNew() {
   const auth = useAuth();
@@ -59,6 +60,7 @@ export default function DashboardLinksNew() {
 
   return (
     <div>
+
       <Greetings userName={creatorName} />
       <ProfileCard profile={profile} />
       <Tools ToolData={profile.username} />

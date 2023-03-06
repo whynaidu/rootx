@@ -90,11 +90,9 @@ export default function ProfileSettings() {
             setnewProfileImage(null);
 
         toast.success("Updated Profile");
-        console.log(resposne);
       })
       .catch((err) => {
-        toast.error(err);
-        console.log(err);
+        toast.error("Profile Not Updated");
       });
   }
 

@@ -22,7 +22,6 @@ export default function SociaLinks(props) {
 
   return (
     <>
-      {/* {console.log(socialLinks)} */}
       <div>
         <div className="flex flex-grow w-full py-5">
           <div className=" w-full text-4xl flex justify-center flex-wrap">

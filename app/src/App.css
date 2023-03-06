@@ -34,3 +34,16 @@ box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
   0% { transform: scale(0); opacity: 0.8;}
   100% { transform: scale(1.5); opacity: 0;}
 }
+body::-webkit-scrollbar {
+  width: 0.5em;
+}
+body::-webkit-scrollbar-track {
+  background-color: rgb(212, 169, 251);
+}
+
+ 
+body::-webkit-scrollbar-thumb {
+  
+  border-radius: 10px;
+  background-color: rgb(112, 50, 162);
+}

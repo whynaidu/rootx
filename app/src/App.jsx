@@ -1,6 +1,6 @@
 import "./App.css";
 import Dashboard from "./components/dashboard/Dashboard";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import CreatorLinks from "./components/creator/CreatorLinks";
 import DashboardLinksNew from "./components/dashboard/DashboardLinksNew";
 import Analytics from "./components/dashboard/Analytics";
@@ -8,14 +8,21 @@ import ProfileSettings from "./components/dashboard/ProfileSettings";
 import NotFound from "./components/dashboard/NotFound";
 import Login from "./components/dashboard/Login";
 import SignUp from "./components/dashboard/SignUp";
-// import Guard from "./Guard";
 import { AuthProvider } from "./auth/auth";
 import SocialHub from "./components/dashboard/SocialLinks";
 import { RequireAuth } from "./auth/requireAuth";
+import { redirect } from "react-router-dom";
+
+import { useAuth } from "./auth/auth";
+import { useState, useEffect } from "react";
 
 
 
 function App() {
+
+
+  
+
   
   return (
     <AuthProvider>
@@ -27,7 +34,7 @@ function App() {
           element={
             <RequireAuth>
               <Dashboard />
-             </RequireAuth>
+            </RequireAuth>
           }
         >
           <Route
@@ -43,7 +50,7 @@ function App() {
             element={
               <RequireAuth>
                 <Analytics />
-            </RequireAuth>
+              </RequireAuth>
             }
           />
           <Route
@@ -63,10 +70,11 @@ function App() {
             }
           />
         </Route>
-        <Route path="*" element={<NotFound />} />
         <Route path="/login" element={<Login />} />
 
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/*" element={<NotFound />} />
+        <Route path="/notfound" element={<NotFound />} />
       </Routes>
     </AuthProvider>
   );

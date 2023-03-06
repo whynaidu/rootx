@@ -72,7 +72,6 @@ export default function DashboardLinks({ LinksList }) {
     const addLink = await axios
       .post(`http://localhost:3001/api/${auth.user}/addlink`, formData)
       .then((res) => {
-        console.log(res);
         setIsOpen(false);
         setRootName("");
         setRootImage("");
@@ -93,7 +92,6 @@ export default function DashboardLinks({ LinksList }) {
       .then((response) => {
         setModalData(response.data[0].Link[0]);
         setnewLInkVisbility(response.data[0].Link[0].visible);
-        console.log(response.data[0].Link[0].visible);
 
         setnewLInkName(response.data[0].Link[0].linkName);
         setnewLInkUrl(response.data[0].Link[0].linkUrl);
@@ -145,7 +143,6 @@ export default function DashboardLinks({ LinksList }) {
       const response = await axios.post(
         `http://localhost:3001/api/deleteLink/${auth.user}/${id}`
       );
-      console.log(response);
       setLinkData(response.data.Link.reverse());
 
       toast.success("Link deleted successfully!");
