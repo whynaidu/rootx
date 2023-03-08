@@ -17,6 +17,7 @@ export default function DashboardSidebar() {
   const auth = useAuth();
   const [CreatorName, setCreatorName] = useState();
   const [CreatorImage, setCreatorImage] = useState();
+  const [glogin, setglogin] = useState(false);
 
   const navigate = useNavigate();
   const url = `http://localhost:3001/creator/${auth.user}`;
@@ -27,13 +28,13 @@ export default function DashboardSidebar() {
       auth.setUser(tokenValue);
     }
 
-   if (auth.user) {
-     getUsers();
-     const intervalId = setInterval(() => {
-       getUsers();
-     }, 5000); // call getUsers every 10 seconds
-     return () => clearInterval(intervalId); // cleanup function to clear interval
-   }
+    if (auth.user) {
+      getUsers();
+      const intervalId = setInterval(() => {
+        getUsers();
+      }, 5000); // call getUsers every 10 seconds
+      return () => clearInterval(intervalId); // cleanup function to clear interval
+    }
   }, [auth.user, url]);
 
   const getUsers = async () => {
@@ -42,6 +43,7 @@ export default function DashboardSidebar() {
       if (response && response.data && response.data.length > 0) {
         setCreatorName(response.data[0].creatorname);
         setCreatorImage(response.data[0].logo);
+        setglogin(response.data[0].glogin);
       } else {
         console.log("No data returned from server.");
       }
@@ -82,15 +84,36 @@ export default function DashboardSidebar() {
             <img
               className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
               src={ProfileImg}
-              alt="avatar"
             />
           ) : (
             <img
               className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
               src={`../../../public/profileImage/${CreatorImage}`}
-              alt="avatar"
             />
           )}
+
+          {/* {glogin && (
+            CreatorImage === null ? (
+              <img
+              className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
+              src={CreatorImage}
+              alt="avatar"
+            />
+              
+             ): (
+            <img
+              className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
+              src={ProfileImg}
+              alt="avatar"
+              x
+            />
+          )  (
+            <img
+              className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
+              src={`../../../public/profileImage/${CreatorImage}`}
+              alt="avatar"
+            />
+          ))} */}
           <h4 className="mx-2 mt-2 font-medium ">{CreatorName}</h4>
         </div>
 

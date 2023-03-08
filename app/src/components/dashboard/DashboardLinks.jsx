@@ -375,9 +375,9 @@ export default function DashboardLinks({ LinksList }) {
                             <div className="flex items-center justify-center h-full w-full">
                               <label className="cursor-pointer h-5/6 md:h-full lg:h-full w-full lg:mr-4 mr-2">
                                 <span
-                                  className={`flex items-center justify-center border-2 border-purple-800 lg:h-full md:h-full h-full focus:outline-none text-purple-900 font-medium lg:text-md text-xs  rounded-xl hover:bg-purple-800 hover:text-white hover:shadow-lg  bg-[url(./../../../../public/linkImage/${ModalData.linkImagName})]`}
+                                  className="flex items-center justify-center border-2 border-purple-800 lg:h-full md:h-full h-full focus:outline-none text-purple-900 font-medium lg:text-md text-xs  rounded-xl hover:bg-purple-800 hover:text-white hover:shadow-lg ]"
                                   style={{
-                                    // backgroundImage: `url(./../../../../public/linkImage/${ModalData.linkImagName})`,
+                                   backgroundImage: `url(./../../../../public/linkImage/${ModalData.linkImagName})`,
                                     opacity: "1",
                                     backgroundRepeat: "no-repeat",
                                     backgroundSize: "102%",

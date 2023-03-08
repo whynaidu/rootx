@@ -5,25 +5,24 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ProfileImg from "../../assets/profileImage.png";
 
-
 // import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 export default function ProfileCard(props) {
+  const [profileData, setProfileData] = useState({});
+  const [glogin, setglogin] = useState(false);
 
- const [profileData, setProfileData] = useState({});
-
-  useEffect(()=>{
-  setProfileData(props.profile)
-  })
-
-
+  useEffect(() => {
+    setProfileData(props.profile);
+    setglogin(profileData.logo);
+  },[props]);
 
   return (
     <div>
       <div className="flex card items-center rounded-lg py-5 px-5">
         <div className="flex h-16">
           <div className="pulseLoader2 relative h-full"></div>
+          
           {profileData.logo === null ? (
             <img
               className="absolute ring-2 ring-purple-500 rounded-full w-16 h-16"

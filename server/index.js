@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const jwt_decode = require("jwt-decode");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -76,6 +77,34 @@ app.post(
     return res.status(200).json(addlink);
   }
 );
+
+app.post("/api/googlesignup", async (req, res) => {
+  const { token } = req.body;
+  let Payload = await jwt_decode(token);
+  let { name, email, picture } = Payload;
+
+  const getemail = await ProfileSchema.find({ creatoremail: email });
+
+  const uname = name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+  const duplicateemail = getemail.length;
+
+  if (duplicateemail != 0) {
+    res.status(403).send("User Already registered. Please login in!");
+  } else {
+    try {
+      const addCreator = await new ProfileSchema({
+        creatoremail: email,
+        creatorname: name,
+        creatorUsername: uname,
+        // logo: picture,
+        glogin: true,
+      }).save();
+      res.status(200).send({ data: addCreator, message: "SignUp Sussesfull" });
+    } catch (error) {
+      res.status(403).send(error);
+    }
+  }
+});
 
 app.post("/api/adduser", async (req, res) => {
   const { username, password, creatoremail } = req.body;
@@ -215,7 +244,7 @@ app.post("/api/creatorVisited/:username/", async (req, res) => {
   }
 });
 
-// app.get("/api/pageviews/:email", async (req, res) => {
+
 //   try {
 //     const email = req.params.email;
 //     const oneWeekAgo = new Date();
@@ -256,14 +285,19 @@ app.post(
       let update = {
         creatorname: name,
         creatorUsername: username,
-        bio,
+        bio: bio === "null" ? null : bio, 
       };
-
+      
       if (req.file) {
         const profile = await ProfileSchema.findOne({ creatoremail: email });
         if (profile && profile.logo) {
           const filePath = `../app/public/profileImage/${profile.logo}`;
-          fs.unlinkSync(filePath);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          } else {
+            console.log("File not found in directory");
+            // do something else here
+          }
         }
 
         update.logo = req.file.filename;
@@ -284,12 +318,39 @@ app.post(
   }
 );
 
+
+app.post(
+  "/api/updateTheme/:email",
+  async (req, res) => {
+    try {
+      const email = req.params.email;
+      const { color } = req.body;
+
+      let update = {
+        colorTheme:color
+      };
+
+      const data = await ProfileSchema.findOneAndUpdate(
+        { creatoremail: email },
+        update,
+        {
+          new: true,
+        }
+      );
+      return res.status(200).send(data);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+
 app.post("/api/login", async (req, res) => {
-  
   const user = await ProfileSchema.findOne({
     creatoremail: req.body.email,
   });
-  console.log(user.creatorname)
+  //  console.log(user)
 
   if (!user) {
     return { status: "error", error: "Invalid login" };
@@ -315,6 +376,36 @@ app.post("/api/login", async (req, res) => {
     return res.json({ status: "401", user: false });
   }
 });
+
+app.post("/api/googlelogin", async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) return res.send("Please provide a valid token");
+
+    let Payload = await jwt_decode(token);
+    const user = await ProfileSchema.findOne({ creatoremail: Payload.email });
+
+    if (!user) {
+      return res
+        .status(401)
+        .send("User not registered. Please sign-up with Google first");
+    } else {
+      const token = jwt.sign(
+        {
+          id: user._id,
+          name: user.creatorname,
+          email: user.creatoremail,
+        },
+        "secret123"
+      );
+      return res.status(200).send({ user: user, token: token });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Server error");
+  }
+});
+
 
 // app.post("/api/login", async (req, res) => {
 //   try {
@@ -359,8 +450,6 @@ app.post("/api/login", async (req, res) => {
 //     res.status(500).json({ error: "Server error" });
 //   }
 // });
-
-
 
 app.post("/api/deleteLink/:username/:id", async (req, res) => {
   try {
@@ -416,7 +505,6 @@ app.get("/creator/:email", async (req, res) => {
   }
 });
 
-
 app.get("/:username", async (req, res) => {
   try {
     const username = req.params.username;
@@ -427,13 +515,10 @@ app.get("/:username", async (req, res) => {
     } else {
       res.send(data);
     }
-
   } catch (error) {
     res.status(500).send("User Not Found");
   }
 });
-
-
 
 app.get("/api/getUserLinks/:email/:linkid", async (req, res) => {
   const email = req.params.email;

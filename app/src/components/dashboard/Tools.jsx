@@ -15,14 +15,12 @@ export default function Tools(props) {
   
 })
    const copy = async () => {
-     await navigator.clipboard.writeText(
-       `https://rootx.com/${Tools}`
-     );
+     await navigator.clipboard.writeText(`http://localhost:5173/${Tools}`);
    toast.success("Url Copied!");
 
   };
   function openUrl() {
-    window.open(`https://rootx.com/${Tools}`, "_blank");
+    window.open(`http://localhost:5173/${Tools}`, "_blank");
   }
 
 

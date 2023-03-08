@@ -29,7 +29,6 @@ export default function DashboardLinksNew() {
       auth.setUser(nameValue);
       auth.setToken(tokenValue);
     }
-
     if (auth.user) {
     fetchData();
     }

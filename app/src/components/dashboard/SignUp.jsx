@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/auth";
 
 export default function SignUp() {
+  const auth = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +22,58 @@ export default function SignUp() {
     setCPassword(e.target.value);
   }
 
+  const handleCallbackResponse = async (response) => {
+    const ssotoken = response.credential;
+    const data = {
+      token: ssotoken,
+    };
+
+    try {
+      let resp = await axios.post(
+        `http://localhost:3001/api/googlesignup`,
+        data
+      );
+      if (resp.status === 200) {
+        await auth.setUser(resp.data.data.creatoremail);
+      } else {
+        if (resp.status === 403) {
+          console.log(resp.data.message);
+
+          // toast.error(resp.data);
+        }
+      }
+    } catch (err) {
+      toast.error("Already registered. Please login in!");
+      console.log(err);
+    }
+  };
+  
+useEffect(() => {
+  if (auth.user) {
+    console.log(auth.user);
+    localStorage.setItem("Name", auth.user);
+    toast.success("Signup Successful");
+
+    const DELAY_TIME_MS = 1800;
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, DELAY_TIME_MS);
+  }
+}, [auth.user, auth.token, navigate]);
+
   useEffect(() => {
+
+    const google = window.google;
+    google.accounts.id.initialize({
+      client_id:
+        "392108795050-28us09ng9mhp1c0kjnrrakju1loht2ea.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+
     if (cpassword != password) {
       setpasswordMatch(false);
     } else {
@@ -96,7 +149,7 @@ export default function SignUp() {
     <div>
       <Toaster position="top-right" />
 
-      <div className="loginPage justify-center w-full bg-cover h-[100vh] flex items-center">
+      <div className="py-16 loginPage justify-center w-full bg-cover flex items-center">
         <div className="bg-[#ffffff80]  lg:w-1/3 rounded-xl m-4 p-6 mt-auto mb-auto shadow-lg">
           <div className="lg:px-6 px-2 text-gray-800">
             <div className="flex h-full items-center justify-center xl:justify-center">
@@ -104,6 +157,12 @@ export default function SignUp() {
                 <h1 className="text-center text-3xl font-medium my-5">
                   Create an Account{" "}
                 </h1>
+                <div
+                  id="signInDiv"
+                  className="flex justify-center"
+                  style={{ margin: "15px" }}
+                ></div>
+               <p className="w-full text-center">OR</p> 
                 <form onSubmit={SigninSubmit}>
                   <div className="flex-wrap items-stretch w-full mb-4 relative">
                     <label className="mb-4 text-xl">Username</label>
@@ -124,7 +183,7 @@ export default function SignUp() {
                         <p className="text-red-500">User Found</p>
                       ) : (
                         <p className="text-green-500">Username Available</p>
-                      ))}{" "}
+                      ))}
                   </div>
                   <div className="mb-3">
                     <label className="mb-4 text-xl">Email</label>

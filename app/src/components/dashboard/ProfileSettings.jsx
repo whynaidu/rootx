@@ -16,13 +16,14 @@ export default function ProfileSettings() {
   const [UpdateProfileImage, setUpdateProfileImage] = useState(null);
   const [ProfileImage, setnewProfileImage] = useState(null);
   const [ProfileName, setProfileName] = useState("");
+  const [ProfileEmail, setProfileEmail] = useState("");
+
   const [ProfileBio, setProfileBio] = useState("");
   const [ProfileUsername, setProfileUsername] = useState("");
   const [newProfileName, setnewProfileName] = useState("");
-  const [newProfileBio, setnewProfileBio] = useState("");
+  const [newProfileBio, setnewProfileBio] = useState(null);
   const [newProfileUsername, setnewProfileUsername] = useState("");
 
-     
   useEffect(() => {
     const tokenValue = localStorage.getItem("Name");
     if (tokenValue) {
@@ -32,16 +33,18 @@ export default function ProfileSettings() {
       getUsers();
     }
   }, [auth.user]);
-  
-    const getUsers = async () => {
-      const url = `http://localhost:3001/creator/${auth.user}`;
-      const getdata = await axios.get(url);
-      const arrayData = getdata.data[0];
-      setImageData(arrayData.logo);
-      setProfileName(arrayData.creatorname);
-      setProfileBio(arrayData.bio);
-      setProfileUsername(arrayData.creatorUsername);
-    };
+
+  const getUsers = async () => {
+    const url = `http://localhost:3001/creator/${auth.user}`;
+    const getdata = await axios.get(url);
+    const arrayData = getdata.data[0];
+    setImageData(arrayData.logo);
+    setProfileName(arrayData.creatorname);
+    setProfileBio(arrayData.bio);
+    setProfileEmail(arrayData.creatoremail);
+    console.log(ProfileBio);
+    setProfileUsername(arrayData.creatorUsername);
+  };
 
   function handleProfileName(click) {
     setnewProfileName(click.target.value);
@@ -59,41 +62,49 @@ export default function ProfileSettings() {
     setnewProfileImage(URL.createObjectURL(click.target.files[0]));
   }
 
-  function updateSubmit(e) {
+  async function updateSubmit(e) {
     e.preventDefault();
 
-     const formData = new FormData();
-     formData.append(
-       "name", newProfileName === "" ? ProfileName : newProfileName
-     );
-     formData.append(
-       "profileImage",
-       UpdateProfileImage === "" ? ProfileImage : UpdateProfileImage
-     );
-    formData.append("bio", newProfileBio === "" ? ProfileBio : newProfileBio);
-     formData.append(
-       "username",
-       newProfileUsername === "" ? ProfileUsername : newProfileUsername
-     );
-    
-    axios
-      .post(
+    const formData = new FormData();
+    formData.append(
+      "name",
+      newProfileName === "" ? ProfileName : newProfileName
+    );
+    formData.append(
+      "profileImage",
+      UpdateProfileImage === "" ? ProfileImage : UpdateProfileImage
+    );
+    formData.append(
+      "bio",
+      newProfileBio === ""
+        ? ProfileBio
+        : newProfileBio === null
+        ? null
+        : newProfileBio
+    );
+    formData.append(
+      "username",
+      newProfileUsername === "" ? ProfileUsername : newProfileUsername
+    );
+
+    try {
+      const response = await axios.post(
         `http://localhost:3001/api/profile/${auth.user}`,
         formData
-       
-      )
-      .then((resposne) => {
-             setImageData(resposne.data.logo);
-             setProfileName(resposne.data.creatorname);
-             setProfileBio(resposne.data.bio);
-        setProfileUsername(resposne.data.creatorUsername);
-            setnewProfileImage(null);
+      );
 
-        toast.success("Updated Profile");
-      })
-      .catch((err) => {
-        toast.error("Profile Not Updated");
-      });
+      const { creatorname, creatorUsername, bio, logo } = response.data;
+      setImageData(logo);
+      setProfileName(creatorname);
+      setProfileBio(bio);
+      setProfileUsername(creatorUsername);
+      setnewProfileImage(null);
+
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update profile");
+    }
   }
 
   return (
@@ -182,6 +193,20 @@ export default function ProfileSettings() {
                               defaultValue={ProfileName}
                               name="integration[shop_name]"
                               id="integration_shop_name"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs">
+                            <label className="font-semibold text-gray-600 py-2">
+                              Email ID
+                            </label>
+                            <input
+                              readOnly
+                              disabled
+                              placeholder="Email ID"
+                              className="appearance-none focus:border-0  block w-full bg-purple-300/50 text-grey-darker border-1 border-purple-800 rounded-lg h-10 px-4 "
+                              type="text"
+                              defaultValue={ProfileEmail}
+
                             />
                           </div>
                         </div>

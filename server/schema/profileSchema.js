@@ -13,7 +13,7 @@ const ProfileSchema = new mongoose.Schema({
   },
   creatorUsername: {
     type: String,
-    required: true,
+    default: null,
   },
   bio: {
     type: String,
@@ -21,11 +21,19 @@ const ProfileSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    default: null,
+  },
+  glogin: {
+    type: Boolean,
+    default: null,
   },
   creatoremail: {
     type: String,
     required: true,
+  },
+  colorTheme: {
+    type: String,
+    default: "#ff8800",
   },
   Pageviews: [],
 

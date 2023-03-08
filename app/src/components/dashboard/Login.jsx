@@ -10,26 +10,69 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // async function loginUser(event) {
-  //   event.preventDefault();
-  //   const response = await axios.post(
-  //     "http://localhost:3001/api/login",
-  //     {
-  //       email,
-  //       password,
-  //     },
-  //     {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   );
+ 
+  // const handleCallbackResponse = async (response) => {
+  //   const ssotoken = response.credential;
+  //   const data = {
+  //     token: ssotoken,
+  //   };
 
-  //   const data = await response.data;
-  //   console.log(data);
-  //   await auth.setUser(data.user.creatoremail);
-  //   await auth.setToken(data.token);
-  // }
+  //   try {
+  //     let resp = await axios.post(
+  //       `http://localhost:3001/api/googlelogin`,
+  //       data
+  //     );
+  //     if (resp.status === 200) {
+  //       await auth.setUser(resp.data.user.creatoremail);
+  //       await auth.setToken(data.token);
+  //       console.log(auth)
+
+        
+  //     } else {
+  //       if (resp.status === 401) {
+  //         console.log(resp.data.message);
+  //         toast.error(resp.data);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     toast.error("Login Failed");
+  //     console.log(err);
+  //   }
+  // };
+
+  const handleCallbackResponse = async (response) => {
+    const ssotoken = response.credential;
+    const data = {
+      token: ssotoken,
+    };
+
+    try {
+      const resp = await axios.post(
+        `http://localhost:3001/api/googlelogin`,
+        data
+      );
+
+      if (resp.status === 200 && resp.data) {
+        await auth.setUser(resp.data.user.creatoremail);
+        await auth.setToken(data.token);
+      } else {
+        const errorMessage = resp.data ? resp.data : "Google login failed";
+        toast.error(errorMessage);
+      }
+    } catch (err) {
+      if (err.response.status === 401) {
+        toast.error(err.response.data);
+        setTimeout(() => {
+        navigate("/signup");
+        }, 1000);
+      } else {
+        toast.error("Login failed");
+      }
+      console.log(err);
+    }
+  };
+
+
 async function loginUser(event) {
   event.preventDefault();
 
@@ -58,7 +101,21 @@ async function loginUser(event) {
       toast.error("An error occurred while logging in.");
     }
   }
-}
+  }
+  useEffect(() => {
+
+    const google = window.google;
+    google.accounts.id.initialize({
+      client_id:
+        "392108795050-28us09ng9mhp1c0kjnrrakju1loht2ea.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+    google.accounts.id.prompt();
+  },[])
 
 useEffect(() => {
   if (auth.user && auth.token) {
@@ -85,6 +142,9 @@ useEffect(() => {
                   <h1 className="text-center text-4xl font-medium my-5">
                     Login
                   </h1>
+
+                  <div id="signInDiv" className="flex justify-center" style={{ margin: "15px",  }}></div>
+
                   <form onSubmit={loginUser}>
                     <div className="mb-3">
                       <label className="mb-4 text-xl">Email</label>

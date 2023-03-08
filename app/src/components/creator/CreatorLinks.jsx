@@ -9,13 +9,12 @@ import { useParams } from "react-router";
 import BrandLink from "./BrandLink";
 
 export default function CreatorLinks() {
-  const username =useParams()
+  const username = useParams();
   const url = `http://localhost:3001/${username.username}`;
 
-
   const [links, setLinks] = useState([]);
+  const [color, setColor] = useState("");
   useEffect(() => {
-
     const fetchCreatorVisitedData = async () => {
       try {
         const response = await axios.post(
@@ -26,37 +25,49 @@ export default function CreatorLinks() {
       }
     };
     fetchCreatorVisitedData();
-async function fetchLinks() {
-  try {
-    const response = await axios.get(url);
+    async function fetchLinks() {
+      try {
+        const response = await axios.get(url);
+        setColor(response.data[0].colorTheme)
+        setLinks(response.data);
+      } catch (error) {
+        console.log(error);
+        // handle the error here
+      }
+    }
 
-    
-    setLinks(response.data);
-  } catch (error) {
-  
-    console.log(error);
-    // handle the error here
-  }
-}
-
-fetchLinks();
-
+    fetchLinks();
   }, []);
   return (
     <>
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>
-        <CreatorProifileCard />
-        {links.map((element, c) => (
-          <Links
-            key={c}
-            email={element.creatoremail}
-            links={element.Link.reverse()}
-          />
-        ))}
-        {links.map((social, w) => (
-          <SociaLinks key={w} social={social.SocialLinks} />
-        ))}
-        <BrandLink />
+      <div
+        style={{
+          maxWidth: "100%",
+          backgroundImage: `linear-gradient(140deg, #fcfcfc 15%, ${color} 90%)`,
+        }}
+      >
+        <div
+          style={{
+            height:"100vh",
+            maxWidth: "800px",
+            margin: "0 auto",
+            padding: "2rem",
+  
+          }}
+        >
+          <CreatorProifileCard />
+          {links.map((element, c) => (
+            <Links
+              key={c}
+              email={element.creatoremail}
+              links={element.Link.reverse()}
+            />
+          ))}
+          {links.map((social, w) => (
+            <SociaLinks key={w} social={social.SocialLinks} />
+          ))}
+          <BrandLink />
+        </div>
       </div>
     </>
   );

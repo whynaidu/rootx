@@ -11,19 +11,10 @@ import SignUp from "./components/dashboard/SignUp";
 import { AuthProvider } from "./auth/auth";
 import SocialHub from "./components/dashboard/SocialLinks";
 import { RequireAuth } from "./auth/requireAuth";
-import { redirect } from "react-router-dom";
-
-import { useAuth } from "./auth/auth";
-import { useState, useEffect } from "react";
-
+import Themes from "./components/dashboard/Themes";
 
 
 function App() {
-
-
-  
-
-  
   return (
     <AuthProvider>
       <Routes>
@@ -58,6 +49,14 @@ function App() {
             element={
               <RequireAuth>
                 <ProfileSettings />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="themes"
+            element={
+              <RequireAuth>
+                <Themes />
               </RequireAuth>
             }
           />
