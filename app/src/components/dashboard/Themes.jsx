@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PageHeader from "./PageHeader";
-import { MdColorLens } from "react-icons/md";
+import { MdColorLens, MdVisibility } from "react-icons/md";
 import axios from "axios";
 import { useAuth } from "../../auth/auth";
 import toast, { Toaster } from "react-hot-toast";
@@ -103,13 +103,24 @@ export default function Themes() {
 
       <PageHeader title={"Themes"} Icon={<MdColorLens />} />
       <div className=" bg-[#ffffff80] mt-5 mb-48 rounded-lg px-3 py-2 drop-shadow-2xl">
-        <div className="my-4 text-xl">
-          <h1>Select a Theme</h1>
+        <div className="my-4 text-xl flex">
+          <h1 className="w-full">Select a Theme</h1>
+          <a href="http://localhost:5173/vedantnaidu" target="_blank">
+            <button
+              className="px-3 pt-2 pb-2 mr-2 rounded-lg group  backdrop-blur-xl bg-[#ffffff80] text-purple-800  hover:bg-purple-800 hover:text-purple-200"
+              // onClick={openUrl}
+            >
+              <span className="text-xl flex items-center">
+                <MdVisibility />
+                &nbsp;Preview
+              </span>
+            </button>
+          </a>
         </div>
-        <div className="flex">
-          <div className="p-1 gap-2 grid grid-cols-2 w-full">
+        <div className="flex flex-col lg:flex-row">
+          <div className="p-1 gap-2 grid grid-cols-3 w-full">
             <div
-              className="lg:h-56  h-28 rounded-lg flex justify-center items-center cursor-pointer text-red-700"
+              className="lg:h-48 h-16 rounded-lg flex justify-center items-center cursor-pointer text-red-700"
               onClick={() => updateColorTheme("#fc0303")}
               style={{
                 backgroundImage:
@@ -119,7 +130,7 @@ export default function Themes() {
               Red
             </div>
             <div
-              className="bg-blue-700 lg:h-56  h-28 rounded-lg flex justify-center items-center cursor-pointer text-blue-900"
+              className="bg-blue-700 lg:h-48  h-16 rounded-lg flex justify-center items-center cursor-pointer text-blue-900"
               onClick={() => updateColorTheme("#0390fc")}
               style={{
                 backgroundImage:
@@ -129,7 +140,7 @@ export default function Themes() {
               Blue
             </div>
             <div
-              className="bg-purple-700 lg:h-56 h-28  rounded-lg flex justify-center items-center cursor-pointer text-purple-700"
+              className="bg-purple-700 lg:h-48 h-16  rounded-lg flex justify-center items-center cursor-pointer text-purple-700"
               onClick={() => updateColorTheme("#f003fc")}
               style={{
                 backgroundImage:
@@ -139,7 +150,7 @@ export default function Themes() {
               Purple
             </div>
             <div
-              className="bg-green-700 lg:h-56 h-28  rounded-lg flex justify-center items-center cursor-pointer text-green-700"
+              className="bg-green-700 lg:h-48 h-16  rounded-lg flex justify-center items-center cursor-pointer text-green-700"
               onClick={() => updateColorTheme("#24fc03")}
               style={{
                 backgroundImage:
@@ -149,7 +160,7 @@ export default function Themes() {
               Green
             </div>
             <div
-              className="bg-black lg:h-56 h-28  rounded-lg flex justify-center items-center cursor-pointer text-white"
+              className="bg-black lg:h-48 h-16  rounded-lg flex justify-center items-center cursor-pointer text-white"
               onClick={() => updateColorTheme("#000000")}
               style={{
                 backgroundImage:
@@ -159,7 +170,7 @@ export default function Themes() {
               Black
             </div>
             <div
-              className="bg-yellow-700 lg:h-56 h-28  rounded-lg flex justify-center items-center cursor-pointer text-yellow-900"
+              className="bg-yellow-700 lg:h-48 h-16  rounded-lg flex justify-center items-center cursor-pointer text-yellow-900"
               onClick={() => updateColorTheme("#d7ed11")}
               style={{
                 backgroundImage:
@@ -168,14 +179,6 @@ export default function Themes() {
             >
               Yellow
             </div>
-          </div>
-          <div className="w-full p-2">
-            <iframe
-              id="creatorFrame"
-              src={`http://localhost:5173/${user}`}
-              // src="http://localhost:5173/vedantnaidu"
-              className="overflow-hidden rounded-xl lg:h-full lg:w-full h-full"
-            ></iframe>
           </div>
         </div>
       </div>

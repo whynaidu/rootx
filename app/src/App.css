@@ -1,38 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-#root{
-  font-family: 'Poppins', sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+#root {
+  font-family: "Poppins", sans-serif;
+  height: 100%;
 }
-.card{
-margin:15px 0 15px 0;
-background-color: rgba(255, 255, 255, 0.5);
-backdrop-filter: blur(20px);
--webkit-box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
--moz-box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
-box-shadow: 1px 3px 39px -27px rgba(0,0,0,1);
+html,
+body {
+  margin: 0;
+  height: 100%;
 }
 
+.card {
+  margin: 15px 0 15px 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-box-shadow: 1px 3px 39px -27px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 1px 3px 39px -27px rgba(0, 0, 0, 1);
+  box-shadow: 1px 3px 39px -27px rgba(0, 0, 0, 1);
+}
 
+.apps {
+  /* overflow-y: overlay; */
+  /* height: 100%; */
+  background-image: linear-gradient(120deg, #fcfcfc 10%, #ebadff 100%);
+  background-repeat: no-repeat;
+  background-attachment:fixed;
+}
 
 .pulseLoader2 {
- width: 65px;
- height: 90px;
- border-radius: 50%;
- background-color: rgb(73, 73, 159);
- outline: 1px solid transparent;
- animation: pulse 2s ease-in-out infinite; 
+  width: 65px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: rgb(73, 73, 159);
+  outline: 1px solid transparent;
+  animation: pulse 2s ease-in-out infinite;
 }
 .pulseLoader {
- width: 80px;
- height: 100px;
- border-radius: 50%;
- background-color: rgb(73, 73, 159);
- outline: 1px solid transparent;
- animation: pulse 2s ease-in-out infinite; 
+  width: 80px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgb(73, 73, 159);
+  outline: 1px solid transparent;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
-  0% { transform: scale(0); opacity: 0.8;}
-  100% { transform: scale(1.5); opacity: 0;}
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 body::-webkit-scrollbar {
   width: 0.5em;
@@ -41,9 +60,7 @@ body::-webkit-scrollbar-track {
   background-color: rgb(212, 169, 251);
 }
 
- 
 body::-webkit-scrollbar-thumb {
-  
   border-radius: 10px;
   background-color: rgb(112, 50, 162);
 }

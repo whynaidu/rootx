@@ -44,15 +44,15 @@ export default function CreatorLinks() {
         style={{
           maxWidth: "100%",
           backgroundImage: `linear-gradient(140deg, #fcfcfc 15%, ${color} 90%)`,
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
         }}
       >
         <div
           style={{
-            height:"100vh",
             maxWidth: "800px",
             margin: "0 auto",
             padding: "2rem",
-  
           }}
         >
           <CreatorProifileCard />

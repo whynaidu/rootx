@@ -12,6 +12,7 @@ import { AuthProvider } from "./auth/auth";
 import SocialHub from "./components/dashboard/SocialLinks";
 import { RequireAuth } from "./auth/requireAuth";
 import Themes from "./components/dashboard/Themes";
+import Settings from "./components/dashboard/Settings";
 
 
 function App() {
@@ -45,7 +46,7 @@ function App() {
             }
           />
           <Route
-            path="profile"
+            path="setting/profile"
             element={
               <RequireAuth>
                 <ProfileSettings />
@@ -53,7 +54,7 @@ function App() {
             }
           />
           <Route
-            path="themes"
+            path="setting/themes"
             element={
               <RequireAuth>
                 <Themes />
@@ -68,6 +69,15 @@ function App() {
               </RequireAuth>
             }
           />
+          <Route
+            path="setting"
+            element={
+              <RequireAuth>
+                <Settings />
+              </RequireAuth>
+            }
+          />
+          
         </Route>
         <Route path="/login" element={<Login />} />
 
