@@ -46,16 +46,15 @@ async function fetchCreator() {
             <div className="pulseLoader relative h-full"></div>
             {creator.logo === null ? (
               <img
-                className="absolute ring-1 ring-blue-500 rounded-full h-[inherit]"
+                className={`absolute ring-2 ring-[${creator.colorTheme}] rounded-full h-[inherit]`}
                 src={Image}
               />
             ) : (
               <img
-                className="absolute ring-1 w-20 ring-blue-500 rounded-full h-[inherit]"
+                className={`absolute ring-2 ring-[${creator.colorTheme}] w-20 rounded-full h-[inherit]`}
                 src={`../../../public/profileImage/${creator.logo}`}
               />
             )}
-
           </div>
           <div className="text-center">
             {creator.creatorname === null ? (

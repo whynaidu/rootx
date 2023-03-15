@@ -19,7 +19,7 @@ export default function ProfileCard(props) {
 
   return (
     <div>
-      <div className="flex card items-center rounded-lg py-5 px-5">
+      <div className="flex card items-center rounded-lg py-5 px-5 drop-shadow-2xl">
         <div className="flex h-16">
           <div className="pulseLoader2 relative h-full"></div>
           
@@ -47,7 +47,7 @@ export default function ProfileCard(props) {
           <p className="font-sans text-[16px] font-thin	">{profileData.bio}</p>
         </div>
         <div>
-          <Link to="/profile">
+          <Link to="/setting/profile">
             <EditIcon className="cursor-pointer transition hover:ease-in-out delay-700 text-purple-800 hover:scale-[1.3] hover:text-purple-800 duration-800 " />
           </Link>
         </div>

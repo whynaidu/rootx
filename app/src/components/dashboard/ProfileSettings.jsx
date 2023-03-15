@@ -4,25 +4,42 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import PersonIcon from "@mui/icons-material/Person";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Fragment } from "react";
+
+import { Dialog, Transition } from "@headlessui/react";
+
 import { useAuth } from "../../auth/auth";
 
 import toast, { Toaster } from "react-hot-toast";
 import ProfileImg from "../../assets/profileImage.png";
 import { useEffect, useState } from "react";
+import Backbutton from "./Backbutton";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileSettings() {
   const auth = useAuth();
+    const navigate = useNavigate();
+
   const [ImageData, setImageData] = useState(null);
   const [UpdateProfileImage, setUpdateProfileImage] = useState(null);
   const [ProfileImage, setnewProfileImage] = useState(null);
   const [ProfileName, setProfileName] = useState("");
   const [ProfileEmail, setProfileEmail] = useState("");
-
+  const [isOpen, setIsOpen] = useState(false);
   const [ProfileBio, setProfileBio] = useState("");
   const [ProfileUsername, setProfileUsername] = useState("");
   const [newProfileName, setnewProfileName] = useState("");
   const [newProfileBio, setnewProfileBio] = useState(null);
   const [newProfileUsername, setnewProfileUsername] = useState("");
+  const [deleteCondition, setdeleteCondition] = useState(false);
+
+  function AddcloseModal() {
+    setIsOpen(false);
+  }
+
+  function AddopenModal() {
+    setIsOpen(true);
+  }
 
   useEffect(() => {
     const tokenValue = localStorage.getItem("Name");
@@ -42,7 +59,6 @@ export default function ProfileSettings() {
     setProfileName(arrayData.creatorname);
     setProfileBio(arrayData.bio);
     setProfileEmail(arrayData.creatoremail);
-    console.log(ProfileBio);
     setProfileUsername(arrayData.creatorUsername);
   };
 
@@ -107,14 +123,42 @@ export default function ProfileSettings() {
     }
   }
 
+  function deletefield(e) {
+    if (ProfileUsername === e.target.value) {
+      setdeleteCondition(true);
+    } else {
+      setdeleteCondition(false);
+    }
+  }
+
+    function logout() {
+      auth.setUser(null);
+      auth.setToken(null);
+      localStorage.removeItem("Name");
+      localStorage.removeItem("token");
+
+      navigate("/login");
+    }
+
+  async function deleteCreator() {
+    try {
+      const deleteuser = await axios.post(
+        `http://localhost:3001/api/deleteuser/${auth.user}`
+      );
+      if (deleteuser.status === 200) {
+        logout();
+      }
+      
+    } catch {}
+  }
   return (
     <>
       <Toaster position="top-right" />
-      {/* {console.log("hii")} */}
+      {console.log(deleteCondition)}
 
-      <div>
+      <div className="mb-16">
         <PageHeader title={"Profile"} Icon={<PersonIcon />} />
-
+        <Backbutton />
         <div className="bg-[#ffffff80] rounded-lg p-3 mt-5">
           <div className="relative flex">
             <div className="absolute z-0"></div>
@@ -206,7 +250,6 @@ export default function ProfileSettings() {
                               className="appearance-none focus:border-0  block w-full bg-purple-300/50 text-grey-darker border-1 border-purple-800 rounded-lg h-10 px-4 "
                               type="text"
                               defaultValue={ProfileEmail}
-
                             />
                           </div>
                         </div>
@@ -250,13 +293,14 @@ export default function ProfileSettings() {
 
                         <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse">
                           <Link to="/dashboard">
-                            <button className="mb-2 md:mb-0 text-black font-medium text-sm py-2 px-4 rounded-lg bg-slate-300 hover:bg-red-700 hover:text-white hover:shadow-lg">
+                            <button className="mb-2 md:mb-0 text-red-800 font-medium text-sm py-2 px-4 rounded-lg w-full lg:w-min bg-red-300/70 hover:bg-red-700 hover:text-white hover:shadow-lg">
                               Cancel
                             </button>
                           </Link>
+
                           <button
                             type="submit"
-                            className="mb-2 md:mb-0 text-purple-900 font-medium text-sm py-2 px-4 rounded-lg bg-purple-300/90 hover:bg-purple-800 hover:text-white hover:shadow-lg"
+                            className="mb-2 md:mb-0 text-purple-900 font-medium text-sm py-2 px-4 rounded-lg w-full lg:w-min bg-purple-300/90 hover:bg-purple-800 hover:text-white hover:shadow-lg"
                           >
                             Update
                           </button>
@@ -269,7 +313,96 @@ export default function ProfileSettings() {
             </div>
           </div>
         </div>
+        <div className="bg-[#ffffff80] rounded-lg p-3 mt-5 py-4">
+          <button
+            className="bg-red-800 rounded-lg  w-full lg:w-fit py-2 px-3 text-white"
+            onClick={AddopenModal}
+          >
+            Delete Account
+          </button>
+        </div>
       </div>
+
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={AddcloseModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900"
+                  >
+                    We WIll Miss You for Sure !
+                  </Dialog.Title>
+                  <hr />
+                  <div className="mt-2">
+                    <div className="flex">
+                      <div className="w-full my-2">
+                        <div>
+                          <label className="py-2">
+                            Please Type "{ProfileUsername}" to Confirm Account
+                            Deletion
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            className="bg-transparent w-full rounded-lg border-2 border-purple-900 mb-2"
+                            placeholder="Root Name"
+                            onChange={deletefield}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center mx-2 border border-transparent text-black font-medium text-sm py-2 px-4 rounded-lg bg-gray-300 hover:bg-red-700 hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={AddcloseModal}
+                    >
+                      Cancel
+                    </button>
+                    {deleteCondition ? (
+                      <button
+                        onClick={deleteCreator}
+                        className="inline-flex justify-center rounded-md border border-transparent bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      >
+                        Delete Account
+                      </button>
+                    ) : (
+                      <button className="inline-flex justify-center rounded-md border border-transparent bg-red-700/10 px-4 py-2 text-sm font-medium text-white point pointer-events-none">
+                        Delete Account
+                      </button>
+                    )}
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </>
   );
 }

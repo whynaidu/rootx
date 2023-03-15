@@ -1,134 +1,159 @@
-import React from 'react'
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import PinterestIcon from "@mui/icons-material/Pinterest";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import React from "react";
+import {
+  FaTwitch,
+  FaTiktok,
+  FaFacebook,
+  FaInstagram,
+  FaTelegramPlane,
+  FaYoutube,
+  FaWhatsapp,
+  FaTwitter,
+  FaLinkedin,
+  FaDribbble,
+  FaPinterest,
+  FaSnapchat,
+  FaSpotify,
+} from "react-icons/fa";
 import { useEffect, useState } from "react";
 
-
 export default function SociaLinks(props) {
-
-  
-  const [socialLinks, setSocial] = useState([ ]);
-   useEffect(() => {
-     setSocial(props.social);
-   },[]);
-
-
+  const [socialLinks, setSocial] = useState([]);
+  useEffect(() => {
+    setSocial(props.social);
+  }, []);
 
   return (
     <>
       <div>
-        <div className="flex flex-grow w-full py-5">
-          <div className=" w-full text-4xl flex justify-center flex-wrap">
-            {socialLinks.facebook === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.facebook}>
-                <FacebookIcon fontSize="inherit" />
-              </a>
-            )}
+        <div className="my-6">
+          <div className="w-full gap-6 lg:text-4xl text-3xl grid place-items-center grid-cols-5">
+            <div>
+              {socialLinks.facebook === null ? (
+                <p></p>
+              ) : (
+                <a className="" target="_blank" href={socialLinks.facebook}>
+                  <FaFacebook fontSize="inherit" />
+                </a>
+              )}
+            </div>
+            <div className="">
+              {socialLinks.instagram === null ? (
+                <p></p>
+              ) : (
+                <a
+                  
+                  target="_blank"
+                  href={socialLinks.instagram}
+                >
+                  <FaInstagram fontSize="inherit" />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.linkedin === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.linkedin}>
+                  <FaLinkedin fontSize="inherit" />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.snapchat === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.snapchat}>
+                  <FaSnapchat />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.twitch === null ? (
+                <p>sfsdf</p>
+              ) : (
+                <a  target="_blank" href={socialLinks.twitch}>
+                  <FaTwitch fontSize="inherit" />
+                </a>
+              )}
+            </div>
 
-            {socialLinks.instagram === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.instagram}>
-                <InstagramIcon fontSize="inherit" />
-              </a>
-            )}
+            <div>
+              {socialLinks.youtube === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.youtube}>
+                  <FaYoutube fontSize="inherit" />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.twitter === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.twitter}>
+                  <FaTwitter fontSize="inherit" />
+                </a>
+              )}
+            </div>
 
-            {socialLinks.linkedin === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.linkedin}>
-                <LinkedInIcon fontSize="inherit" />
-              </a>
-            )}
-            {socialLinks.snapchat === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.snapchat}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                  <path d="M384,32H64A64,64,0,0,0,0,96V416a64,64,0,0,0,64,64H384a64,64,0,0,0,64-64V96A64,64,0,0,0,384,32Zm-3.907,319.309-.083.1a32.364,32.364,0,0,1-8.717,6.823,90.26,90.26,0,0,1-20.586,8.2,12.694,12.694,0,0,0-3.852,1.76c-2.158,1.909-2.1,4.64-4.4,8.55a23.137,23.137,0,0,1-6.84,7.471c-6.707,4.632-14.244,4.923-22.23,5.23-7.214.274-15.39.581-24.729,3.669-3.761,1.245-7.753,3.694-12.377,6.533-11.265,6.9-26.68,16.353-52.3,16.353s-40.925-9.4-52.106-16.279c-4.657-2.888-8.675-5.362-12.543-6.64-9.339-3.08-17.516-3.4-24.729-3.67-7.986-.307-15.523-.6-22.231-5.229a23.085,23.085,0,0,1-6.01-6.11c-3.2-4.632-2.855-7.8-5.254-9.895a13.428,13.428,0,0,0-4.1-1.834,89.986,89.986,0,0,1-20.313-8.127,32.905,32.905,0,0,1-8.3-6.284c-6.583-6.757-8.276-14.776-5.686-21.824,3.436-9.338,11.571-12.111,19.4-16.262,14.776-8.027,26.348-18.055,34.433-29.884a68.236,68.236,0,0,0,5.985-10.567c.789-2.158.772-3.329.241-4.416a7.386,7.386,0,0,0-2.208-2.217c-2.532-1.676-5.113-3.353-6.882-4.5-3.27-2.141-5.868-3.818-7.529-4.98-6.267-4.383-10.65-9.04-13.4-14.245a28.4,28.4,0,0,1-1.369-23.584c4.134-10.924,14.469-17.706,26.978-17.706a37.141,37.141,0,0,1,7.845.83c.689.15,1.37.307,2.042.482-.108-7.43.058-15.357.722-23.119,2.358-27.261,11.912-41.589,21.874-52.994a86.836,86.836,0,0,1,22.28-17.931C188.254,100.383,205.312,96,224,96s35.828,4.383,50.944,13.016a87.169,87.169,0,0,1,22.239,17.9c9.961,11.406,19.516,25.709,21.874,52.995a231.194,231.194,0,0,1,.713,23.118c.673-.174,1.362-.332,2.051-.481a37.131,37.131,0,0,1,7.844-.83c12.5,0,22.82,6.782,26.971,17.706a28.37,28.37,0,0,1-1.4,23.559c-2.74,5.2-7.123,9.861-13.39,14.244-1.668,1.187-4.258,2.864-7.529,4.981-1.835,1.187-4.541,2.947-7.164,4.682a6.856,6.856,0,0,0-1.951,2.034c-.506,1.046-.539,2.191.166,4.208a69.015,69.015,0,0,0,6.085,10.792c8.268,12.1,20.188,22.313,35.454,30.407,1.486.772,2.98,1.5,4.441,2.258.722.332,1.569.763,2.491,1.3,4.9,2.723,9.2,6.01,11.455,12.153C387.821,336.915,386.269,344.7,380.093,351.309Zm-16.719-18.461c-50.313-24.314-58.332-61.918-58.689-64.749-.431-3.379-.921-6.035,2.806-9.472,3.594-3.328,19.541-13.19,23.965-16.278,7.33-5.114,10.534-10.219,8.16-16.495-1.66-4.316-5.686-5.976-9.961-5.976a18.5,18.5,0,0,0-3.993.448c-8.035,1.743-15.838,5.769-20.354,6.857a7.1,7.1,0,0,1-1.66.224c-2.408,0-3.279-1.071-3.088-3.968.564-8.783,1.759-25.925.373-41.937-1.884-22.032-8.99-32.948-17.432-42.6-4.051-4.624-23.135-24.654-59.536-24.654S168.53,134.359,164.479,139c-8.434,9.654-15.531,20.57-17.432,42.6-1.386,16.013-.141,33.147.373,41.937.166,2.756-.68,3.968-3.088,3.968a7.1,7.1,0,0,1-1.66-.224c-4.507-1.087-12.31-5.113-20.346-6.856a18.494,18.494,0,0,0-3.993-.449c-4.25,0-8.3,1.636-9.961,5.977-2.374,6.276.847,11.381,8.168,16.494,4.425,3.088,20.371,12.958,23.966,16.279,3.719,3.437,3.237,6.093,2.805,9.471-.356,2.79-8.384,40.394-58.689,64.749-2.946,1.428-7.96,4.45.88,9.331,13.88,7.628,23.111,6.807,30.3,11.43,6.093,3.927,2.5,12.394,6.923,15.449,5.454,3.76,21.583-.266,42.335,6.6,17.433,5.744,28.116,22.015,58.963,22.015s41.788-16.3,58.938-21.973c20.795-6.865,36.89-2.839,42.336-6.6,4.433-3.055.822-11.522,6.923-15.448,7.181-4.624,16.411-3.8,30.3-11.472C371.36,337.355,366.346,334.333,363.374,332.848Z" />
-                </svg>
-              </a>
-            )}
-            {socialLinks.twitch === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.linkedin}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path d="M391.17,103.47H352.54v109.7h38.63ZM285,103H246.37V212.75H285ZM120.83,0,24.31,91.42V420.58H140.14V512l96.53-91.42h77.25L487.69,256V0ZM449.07,237.75l-77.22,73.12H294.61l-67.6,64v-64H140.14V36.58H449.07Z" />
-                </svg>
-              </a>
-            )}
-
-            {socialLinks.youtube === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.youtube}>
-                <YouTubeIcon fontSize="inherit" />
-              </a>
-            )}
-            {socialLinks.twitter === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.twitter}>
-                <TwitterIcon fontSize="inherit" />
-              </a>
-            )}
-            {socialLinks.pinterest === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.pinterest}>
-                <PinterestIcon fontSize="inherit" />
-              </a>
-            )}
-            {socialLinks.whatsapp === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.whatsapp} >
-                <WhatsAppIcon fontSize="inherit" />
-              </a>
-            )}
-            {socialLinks.tiktok === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.tiktok}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                  <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z" />
-                </svg>
-              </a>
-            )}
-            {socialLinks.dribble === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.dribble}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path d="M256 8C119.252 8 8 119.252 8 256s111.252 248 248 248 248-111.252 248-248S392.748 8 256 8zm163.97 114.366c29.503 36.046 47.369 81.957 47.835 131.955-6.984-1.477-77.018-15.682-147.502-6.818-5.752-14.041-11.181-26.393-18.617-41.614 78.321-31.977 113.818-77.482 118.284-83.523zM396.421 97.87c-3.81 5.427-35.697 48.286-111.021 76.519-34.712-63.776-73.185-116.168-79.04-124.008 67.176-16.193 137.966 1.27 190.061 47.489zm-230.48-33.25c5.585 7.659 43.438 60.116 78.537 122.509-99.087 26.313-186.36 25.934-195.834 25.809C62.38 147.205 106.678 92.573 165.941 64.62zM44.17 256.323c0-2.166.043-4.322.108-6.473 9.268.19 111.92 1.513 217.706-30.146 6.064 11.868 11.857 23.915 17.174 35.949-76.599 21.575-146.194 83.527-180.531 142.306C64.794 360.405 44.17 310.73 44.17 256.323zm81.807 167.113c22.127-45.233 82.178-103.622 167.579-132.756 29.74 77.283 42.039 142.053 45.189 160.638-68.112 29.013-150.015 21.053-212.768-27.882zm248.38 8.489c-2.171-12.886-13.446-74.897-41.152-151.033 66.38-10.626 124.7 6.768 131.947 9.055-9.442 58.941-43.273 109.844-90.795 141.978z" />
-                </svg>
-              </a>
-            )}
-            {socialLinks.spotify === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.spotify}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
-                  <path d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8zm100.7 364.9c-4.2 0-6.8-1.3-10.7-3.6-62.4-37.6-135-39.2-206.7-24.5-3.9 1-9 2.6-11.9 2.6-9.7 0-15.8-7.7-15.8-15.8 0-10.3 6.1-15.2 13.6-16.8 81.9-18.1 165.6-16.5 237 26.2 6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4zm26.9-65.6c-5.2 0-8.7-2.3-12.3-4.2-62.5-37-155.7-51.9-238.6-29.4-4.8 1.3-7.4 2.6-11.9 2.6-10.7 0-19.4-8.7-19.4-19.4s5.2-17.8 15.5-20.7c27.8-7.8 56.2-13.6 97.8-13.6 64.9 0 127.6 16.1 177 45.5 8.1 4.8 11.3 11 11.3 19.7-.1 10.8-8.5 19.5-19.4 19.5zm31-76.2c-5.2 0-8.4-1.3-12.9-3.9-71.2-42.5-198.5-52.7-280.9-29.7-3.6 1-8.1 2.6-12.9 2.6-13.2 0-23.3-10.3-23.3-23.6 0-13.6 8.4-21.3 17.4-23.9 35.2-10.3 74.6-15.2 117.5-15.2 73 0 149.5 15.2 205.4 47.8 7.8 4.5 12.9 10.7 12.9 22.6 0 13.6-11 23.3-23.2 23.3z" />
-                </svg>
-              </a>
-            )}
-            {socialLinks.telegram === null ? (
-              <p></p>
-            ) : (
-              <a className="mx-2" target="_blank" href={socialLinks.telegram}>
-                <TelegramIcon fontSize="inherit" />
-              </a>
-            )}
+            <div>
+              {socialLinks.pinterest === null ? (
+                <p></p>
+              ) : (
+                <a
+                  
+                  target="_blank"
+                  href={socialLinks.pinterest}
+                >
+                  <FaPinterest fontSize="inherit" />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.whatsapp === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.whatsapp}>
+                  <FaWhatsapp fontSize="inherit" />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.tiktok === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.tiktok}>
+                  <FaTiktok />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.dribble === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.dribble}>
+                  <FaDribbble />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.spotify === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.spotify}>
+                  <FaSpotify />
+                </a>
+              )}
+            </div>
+            <div>
+              {socialLinks.telegram === null ? (
+                <p></p>
+              ) : (
+                <a  target="_blank" href={socialLinks.telegram}>
+                  <FaTelegramPlane fontSize="inherit" />
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>

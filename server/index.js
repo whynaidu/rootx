@@ -65,7 +65,7 @@ app.post(
     }
 
     const addlink = await ProfileSchema.findOneAndUpdate(
-      { creatoremail: email },
+      { creatoremail: email, userStatus: { $gte: 1 } },
 
       {
         $push: {
@@ -83,7 +83,10 @@ app.post("/api/googlesignup", async (req, res) => {
   let Payload = await jwt_decode(token);
   let { name, email, picture } = Payload;
 
-  const getemail = await ProfileSchema.find({ creatoremail: email });
+  const getemail = await ProfileSchema.find({
+    creatoremail: email,
+    userStatus: { $gte: 1 },
+  });
 
   const uname = name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
   const duplicateemail = getemail.length;
@@ -108,8 +111,14 @@ app.post("/api/googlesignup", async (req, res) => {
 
 app.post("/api/adduser", async (req, res) => {
   const { username, password, creatoremail } = req.body;
-  const getusername = await ProfileSchema.find({ creatorUsername: username });
-  const getemail = await ProfileSchema.find({ creatoremail: creatoremail });
+  const getusername = await ProfileSchema.find({
+    creatorUsername: username,
+    userStatus: { $gte: 1 },
+  });
+  const getemail = await ProfileSchema.find({
+    creatoremail: creatoremail,
+    userStatus: { $gte: 1 },
+  });
 
   const duplicateemail = getemail.length;
   const duplicate = getusername.length;
@@ -140,21 +149,25 @@ app.post(
     try {
       const linkId = req.params.id;
       const email = req.params.email;
-
-      const { linkname, linkurl, Visible } = req.body;
+      const { linkname, linkurl, Visible, featured, live, expiry } = req.body;
 
       // update object with non-image-related fields
       const updateObj = {
         "Link.$.linkName": linkname,
         "Link.$.linkUrl": linkurl,
         "Link.$.visible": Visible,
+        "Link.$.featured": featured,
+        "Link.$.live": live,
+        "Link.$.expiration": expiry,
+        // "Link.$.expiration": expiry !== "" ? expiry : null, // set expiry to null if it's an empty string
       };
 
       // check if an image was uploaded and update image-related fields if so
+    
       if (req.file) {
         // delete old image if it exists
         const oldLink = await ProfileSchema.findOne(
-          { creatoremail: email, Link: { $elemMatch: { _id: linkId } } },
+          { creatoremail: email,  userStatus: { $gte: 1 }, Link: { $elemMatch: { _id: linkId } } },
           { "Link.$": 1 }
         );
         const oldImagePath = path.join(
@@ -170,7 +183,7 @@ app.post(
       }
 
       const data = await ProfileSchema.findOneAndUpdate(
-        { creatoremail: email, Link: { $elemMatch: { _id: linkId } } },
+        { creatoremail: email, userStatus: { $gte: 1 } , Link: { $elemMatch: { _id: linkId } } },
         { $set: updateObj },
         { new: true }
       );
@@ -189,7 +202,7 @@ app.post("/api/linkClicked/:email/:id", async (req, res) => {
     const email = req.params.email;
 
     const data = await ProfileSchema.findOneAndUpdate(
-      { creatoremail: email, Link: { $elemMatch: { _id: linkId } } },
+      { creatoremail: email, userStatus: { $gte: 1 } , Link: { $elemMatch: { _id: linkId } } },
       { $push: { "Link.$.views": Date.now() } },
       { new: true }
     );
@@ -205,7 +218,10 @@ app.get("/api/topLinks/:email/", async (req, res) => {
   try {
     const email = req.params.email;
 
-    const data = await ProfileSchema.find({ creatoremail: email });
+    const data = await ProfileSchema.find({
+      creatoremail: email,
+      userStatus: { $gte: 1 },
+    });
     const pageView = data[0].Pageviews;
     const PageviesCount = pageView.length;
 
@@ -232,7 +248,7 @@ app.post("/api/creatorVisited/:username/", async (req, res) => {
     const username = req.params.username;
 
     const data = await ProfileSchema.findOneAndUpdate(
-      { creatorUsername: username },
+      { creatorUsername: username, userStatus: { $gte: 1 } },
       { $push: { Pageviews: Date.now() } },
       { new: true }
     );
@@ -243,7 +259,6 @@ app.post("/api/creatorVisited/:username/", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
-
 
 //   try {
 //     const email = req.params.email;
@@ -285,11 +300,14 @@ app.post(
       let update = {
         creatorname: name,
         creatorUsername: username,
-        bio: bio === "null" ? null : bio, 
+        bio: bio === "null" ? null : bio,
       };
-      
+
       if (req.file) {
-        const profile = await ProfileSchema.findOne({ creatoremail: email });
+        const profile = await ProfileSchema.findOne({
+          creatoremail: email,
+          userStatus: { $gte: 1 },
+        });
         if (profile && profile.logo) {
           const filePath = `../app/public/profileImage/${profile.logo}`;
           if (fs.existsSync(filePath)) {
@@ -304,7 +322,7 @@ app.post(
       }
 
       const data = await ProfileSchema.findOneAndUpdate(
-        { creatoremail: email },
+        { creatoremail: email, userStatus: { $gte: 1 } },
         update,
         {
           new: true,
@@ -318,42 +336,38 @@ app.post(
   }
 );
 
+app.post("/api/updateTheme/:email", async (req, res) => {
+  try {
+    const email = req.params.email;
+    const { color } = req.body;
 
-app.post(
-  "/api/updateTheme/:email",
-  async (req, res) => {
-    try {
-      const email = req.params.email;
-      const { color } = req.body;
+    let update = {
+      colorTheme: color,
+    };
 
-      let update = {
-        colorTheme:color
-      };
-
-      const data = await ProfileSchema.findOneAndUpdate(
-        { creatoremail: email },
-        update,
-        {
-          new: true,
-        }
-      );
-      return res.status(200).send(data);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: error.message });
-    }
+    const data = await ProfileSchema.findOneAndUpdate(
+      { creatoremail: email, userStatus: { $gte: 1 } },
+      update,
+      {
+        new: true,
+      }
+    );
+    return res.status(200).send(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
   }
-);
-
+});
 
 app.post("/api/login", async (req, res) => {
   const user = await ProfileSchema.findOne({
     creatoremail: req.body.email,
+    userStatus: { $gte: 1 },
   });
   //  console.log(user)
 
   if (!user) {
-    return { status: "error", error: "Invalid login" };
+    return res.status(404).send("Invalid login");
   }
 
   const isPasswordValid = await bcrypt.compare(
@@ -371,9 +385,9 @@ app.post("/api/login", async (req, res) => {
       "secret123"
     );
 
-    return res.json({ status: "200", user: user, token: token });
+    return res.status(200).send({user: user, token: token });
   } else {
-    return res.json({ status: "401", user: false });
+    return res.status(401).send("Invalid User Credentials");
   }
 });
 
@@ -383,7 +397,10 @@ app.post("/api/googlelogin", async (req, res) => {
     if (!token) return res.send("Please provide a valid token");
 
     let Payload = await jwt_decode(token);
-    const user = await ProfileSchema.findOne({ creatoremail: Payload.email });
+    const user = await ProfileSchema.findOne({
+      creatoremail: Payload.email,
+      userStatus: { $gte: 1 },
+    });
 
     if (!user) {
       return res
@@ -405,7 +422,6 @@ app.post("/api/googlelogin", async (req, res) => {
     return res.status(500).send("Server error");
   }
 });
-
 
 // app.post("/api/login", async (req, res) => {
 //   try {
@@ -457,7 +473,10 @@ app.post("/api/deleteLink/:username/:id", async (req, res) => {
     const linkId = req.params.id;
 
     // find the link that needs to be deleted
-    const profile = await ProfileSchema.findOne({ creatoremail: username });
+    const profile = await ProfileSchema.findOne({
+      creatoremail: username,
+      userStatus: { $gte: 1 },
+    });
     const link = profile.Link.find((link) => link._id == linkId);
 
     // delete the associated image file, if it exists
@@ -468,7 +487,7 @@ app.post("/api/deleteLink/:username/:id", async (req, res) => {
 
     // remove the link from the Link array
     const deleteLink = await ProfileSchema.findOneAndUpdate(
-      { creatoremail: username },
+      { creatoremail: username, userStatus: { $gte: 1 } },
       { $pull: { Link: { _id: linkId } } },
       { new: true }
     );
@@ -480,10 +499,10 @@ app.post("/api/deleteLink/:username/:id", async (req, res) => {
   }
 });
 
-app.post("/api/deleteLink/:email/", async (req, res) => {
+app.post("/api/deleteAllLink/:email/", async (req, res) => {
   const email = req.params.email;
   const deleteLink = await ProfileSchema.findOneAndUpdate(
-    { creatoremail: email },
+    { creatoremail: email, userStatus: { $gte: 1 } },
     { $set: { Link: [] } }
   );
   res.send(deleteLink);
@@ -492,7 +511,7 @@ app.post("/api/deleteLink/:email/", async (req, res) => {
 app.get("/creator/:email", async (req, res) => {
   try {
     const email = req.params.email;
-    const data = await ProfileSchema.find({ creatoremail: email });
+    const data = await ProfileSchema.find({ creatoremail: email, userStatus: { $gte: 1 } });
 
     if (data.length === 0) {
       return res.status(404).send(`No user found with email: ${email}`);
@@ -508,7 +527,10 @@ app.get("/creator/:email", async (req, res) => {
 app.get("/:username", async (req, res) => {
   try {
     const username = req.params.username;
-    const data = await ProfileSchema.find({ creatorUsername: username });
+    const data = await ProfileSchema.find({
+      creatorUsername: username,
+      userStatus: { $gte: 1 },
+    });
 
     if (data.length === 0) {
       return res.status(404).send("User Not Found");
@@ -526,6 +548,7 @@ app.get("/api/getUserLinks/:email/:linkid", async (req, res) => {
   const data = await ProfileSchema.find(
     {
       creatoremail: email,
+       userStatus: { $gte: 1 } ,
       Link: {
         $elemMatch: { _id: linkId },
       },
@@ -540,7 +563,22 @@ app.get("/api/getUserSocialLinks/:email/", async (req, res) => {
   const linkId = req.params.linkid;
   const data = await ProfileSchema.find({
     creatoremail: email,
+    userStatus: { $gte: 1 },
   });
+  res.send(data);
+});
+
+app.post("/api/deleteuser/:emailid", async (req, res) => {
+  const user = req.params.emailid;
+  let update = {
+    userStatus: 0,
+  };
+  const data = await ProfileSchema.findOneAndUpdate(
+    { creatoremail: user, userStatus: { $gte: 1 } },
+    update,
+    { new: true }
+  );
+
   res.send(data);
 });
 

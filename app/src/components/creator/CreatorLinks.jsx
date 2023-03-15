@@ -42,6 +42,7 @@ export default function CreatorLinks() {
     <>
       <div
         style={{
+          height:"100%",
           maxWidth: "100%",
           backgroundImage: `linear-gradient(140deg, #fcfcfc 15%, ${color} 90%)`,
           backgroundRepeat: "no-repeat",

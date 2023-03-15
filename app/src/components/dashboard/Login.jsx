@@ -1,3 +1,9 @@
+
+
+
+
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,8 +17,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
  
-  // const handleCallbackResponse = async (response) => {
-  //   const ssotoken = response.credential;
   //   const data = {
   //     token: ssotoken,
   //   };
@@ -92,10 +96,14 @@ async function loginUser(event) {
 
     const data = await response.data;
     console.log(data);
+    if (data.status === 401) {
+            toast.error("Invalid login details.");
+
+    }
     await auth.setUser(data.user.creatoremail);
     await auth.setToken(data.token);
   } catch (error) {
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401 || 404) {
       toast.error("Invalid login details.");
     } else {
       toast.error("An error occurred while logging in.");

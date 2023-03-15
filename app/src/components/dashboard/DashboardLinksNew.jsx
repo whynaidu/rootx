@@ -48,6 +48,7 @@ export default function DashboardLinksNew() {
          username: creatorData.creatorUsername,
          logo: creatorData.logo,
          bio: creatorData.bio,
+         color:creatorData.colorTheme
        });
      } else {
        console.log("No data returned from server.");
@@ -58,8 +59,14 @@ export default function DashboardLinksNew() {
  }
 
   return (
-    <div>
-
+    <div
+      style={{
+        maxWidth: "100%",
+        backgroundImage: `linear-gradient(140deg, #fcfcfc 15%,  90%)`,
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <Greetings userName={creatorName} />
       <ProfileCard profile={profile} />
       <Tools ToolData={profile.username} />

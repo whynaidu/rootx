@@ -4,23 +4,24 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import PinterestIcon from "@mui/icons-material/Pinterest";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAuth } from "../../auth/auth";
-import { faSnapchat } from "@fortawesome/free-brands-svg-icons";
-import { faTwitch } from "@fortawesome/free-brands-svg-icons";
-import { faSpotify } from "@fortawesome/free-brands-svg-icons";
-import { faTiktok } from "@fortawesome/free-brands-svg-icons";
 
-import { faDribbble } from "@fortawesome/free-brands-svg-icons";
+import {
+  FaRss,
+  FaTwitch,
+  FaTiktok,
+  FaFacebook,
+  FaInstagram,
+  FaTelegramPlane,
+  FaYoutube,
+  FaWhatsapp,
+  FaTwitter,
+  FaLinkedin,
+  FaDribbble,
+  FaPinterest,
+  FaSnapchat,
+  FaSpotify,
+} from "react-icons/fa";
 
 export default function SocialHub() {
   const [socialLinks, setSocialLinks] = useState([]);
@@ -58,10 +59,10 @@ export default function SocialHub() {
   return (
     <>
       {/* <Toaster position="top-right" /> */}
-      <div>
-        <PageHeader title={"SocialHub"} Icon={<ConnectWithoutContactIcon />} />
+      <div className="mb-48">
+        <PageHeader title={"SocialHub"} Icon={<FaRss />} />
 
-        <div className="bg-[#ffffff80] rounded-lg p-3 mt-5 bottom-3/4 mb-24">
+        <div className="bg-[#ffffff80] rounded-lg p-3 mt-5 bottom-3/4 mb-24 drop-shadow-2xl">
           <div className="relative flex">
             <div className="absolute z-0"></div>
             <div className="w-full lg:p-4 p-2 bg-transparent">
@@ -80,11 +81,11 @@ export default function SocialHub() {
                             Social Links
                           </label>
                         </div>
-                        <div className="mb-3 space-y-2 w-full text-xs">
+                        <div className="mb-3 space-y-2 w-full ">
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
-                              <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <FacebookIcon />
+                              <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900  h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
+                                <FaFacebook className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -100,13 +101,13 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <InstagramIcon />
+                                <FaInstagram className="text-2xl" />
                               </span>
                             </div>
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              //defaultValue={ProfileUsername}
+                              defaultValue={socialLinks.instagram}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://www.instagram.com/username/"
                             />
@@ -116,13 +117,13 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <TwitterIcon />
+                                <FaTwitter className="text-2xl" />
                               </span>
                             </div>
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLinks.instagram}
+                              defaultValue={socialLinks.twitter}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://twitter.com/username"
                             />
@@ -132,7 +133,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <LinkedInIcon />
+                                <FaLinkedin className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -148,13 +149,13 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <FontAwesomeIcon icon={faTiktok} size="2x" />
+                                <FaTiktok className="text-2xl" />
                               </span>
                             </div>
                             <input
                               type="text"
                               //onChange={handleProfileUsername}
-                              defaultValue={socialLinks.tikok}
+                              defaultValue={socialLinks.tiktok}
                               className="flex-shrink flex-grow flex-auto leading-normal w-px border-l-0 h-10 border-purple-800  bg-transparent rounded-lg rounded-l-none px-3 relative focus:border-blue focus:shadow  lg:text-[15px] text-[11px] placeholder-gray-400"
                               placeholder="https://www.tiktok.com/@username"
                             />
@@ -164,7 +165,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <FontAwesomeIcon icon={faSpotify} size="2x" />
+                                <FaSpotify className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -180,7 +181,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <TelegramIcon />
+                                <FaTelegramPlane className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -196,7 +197,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <YouTubeIcon />
+                                <FaYoutube className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -212,7 +213,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <FontAwesomeIcon icon={faDribbble} size="2x" />
+                                <FaDribbble className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -228,7 +229,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800 fill-purple-800">
-                                <FontAwesomeIcon icon={faSnapchat} size="2x" />
+                                <FaSnapchat className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -244,7 +245,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <PinterestIcon />
+                                <FaPinterest className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -260,7 +261,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <FontAwesomeIcon icon={faTwitch} size="2x" />
+                                <FaTwitch className="text-2xl" />
                               </span>
                             </div>
                             <input
@@ -276,7 +277,7 @@ export default function SocialHub() {
                           <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <div className="flex">
                               <span className="flex leading-normal rounded-r-none px-3 border-r-0 border border-purple-900 text-sm h-10 w-16 bg-purple-300 justify-center items-center rounded-lg font-medium text-purple-800">
-                                <WhatsAppIcon />
+                                <FaWhatsapp className="text-2xl" />
                               </span>
                             </div>
                             <input

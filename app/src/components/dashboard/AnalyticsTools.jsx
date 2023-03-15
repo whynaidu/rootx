@@ -4,7 +4,7 @@ import React from "react";
 export default function AnalyticsTools() {
   return (
     <div>
-      <div className="bg-[#ffffff80] rounded-lg my-4 w-full">
+      <div className="bg-[#ffffff80] rounded-lg my-4 w-full ">
         <div className="p-3">
           <ul className="flex justify-evenly cursor-pointer">
             <li className="py-2 mr-1 w-full text-center text-purple-900 hover:bg-white bg-purple-200 rounded-md">

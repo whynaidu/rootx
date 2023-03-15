@@ -20,7 +20,7 @@ export default function TopLinks() {
 
   return (
     <div>
-      <div className="mt-4 bg-[#ffffff80] rounded-lg p-3">
+      <div className="mt-4 bg-[#ffffff80] rounded-lg p-3 drop-shadow-2xl">
         <h1 className="text-2xl text-bold pb-2">Top Roots</h1>
 
         <hr />

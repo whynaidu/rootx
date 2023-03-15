@@ -7,11 +7,20 @@ import { Fragment, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import { useEffect } from "react";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+// import DateTimePicker from "react-datetime-picker/dist/entry.nostyle";
+import { Draggable } from "react-drag-reorder";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { makeStyles } from "@mui/styles";
+
 import NoImage from "../../assets/Untitled design (3).png";
 import axios from "axios";
 import { useAuth } from "../../auth/auth";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import moment from "moment";
 
 export default function DashboardLinks({ LinksList }) {
   let [isOpen, setIsOpen] = useState(false);
@@ -19,6 +28,10 @@ export default function DashboardLinks({ LinksList }) {
   const [RootName, setRootName] = useState("");
   const [RootUrl, setRootUrl] = useState("");
   const [RootImage, setRootImage] = useState("");
+  const [livetime, setLiveTime] = useState(null);
+  const [expirytime, setExpirytime] = useState(null);
+  const [prevLiveTime, setPrevLiveTime] = useState(null);
+
   let [modalOpen, setIsOpenModal] = useState(false);
   let [LinkData, setLinkData] = useState(LinksList.reverse());
   let [rowId, setRowId] = useState(null);
@@ -26,6 +39,38 @@ export default function DashboardLinks({ LinksList }) {
   let [newLinkURL, setnewLInkUrl] = useState("");
   let [newLinkImage, setnewLInkImage] = useState("");
   let [newLinkVisiblity, setnewLInkVisbility] = useState();
+  let [newLinkFeatured, setnewLinkFeatured] = useState();
+
+  // const useStyles = makeStyles({
+  //   root: {
+  //     "& .MuiInputBase-root": {
+  //       border: "1px solid red",
+  //     },
+  //   },
+  // });
+
+  const useStyles = makeStyles({
+    root: {
+      "& .MuiInputBase-root": {
+        // padding: 0,
+        "& .MuiButtonBase-root": {
+          // padding: 0,
+          // paddingLeft: 10,
+        },
+        "& .MuiInputBase-input": {
+          display: "flex",
+          alignItems: "center",
+          padding: "14px 13px",
+          border: "none",
+          "&:focus": {
+            outline: "none",
+            boxShadow: "none",
+          },
+        },
+      },
+    },
+  });
+  const classes = useStyles();
 
   const [ModalData, setModalData] = useState([]);
   const auth = useAuth();
@@ -92,10 +137,10 @@ export default function DashboardLinks({ LinksList }) {
       .then((response) => {
         setModalData(response.data[0].Link[0]);
         setnewLInkVisbility(response.data[0].Link[0].visible);
-
+        setnewLinkFeatured(response.data[0].Link[0].featured);
         setnewLInkName(response.data[0].Link[0].linkName);
         setnewLInkUrl(response.data[0].Link[0].linkUrl);
-
+        setPrevLiveTime(response.data[0].Link[0].live);
         openModal();
       })
       .catch((error) => {
@@ -121,6 +166,9 @@ export default function DashboardLinks({ LinksList }) {
     formData.append("linkurl", newLinkURL);
     formData.append("linkImage", newLinkImage);
     formData.append("Visible", newLinkVisiblity);
+    formData.append("featured", newLinkFeatured);
+    formData.append("live", livetime ? livetime : prevLiveTime);
+    formData.append("expiry", expirytime);
 
     const updateData = await axios
       .post(
@@ -138,6 +186,10 @@ export default function DashboardLinks({ LinksList }) {
       });
   }
 
+  function getChangedPos (currentPos, newPos){
+    console.log(currentPos, newPos);
+  };
+
   async function deleteLink(id) {
     try {
       const response = await axios.post(
@@ -152,9 +204,14 @@ export default function DashboardLinks({ LinksList }) {
       toast.error("Error deleting link.");
     }
   }
+  // const classes = useStyles();
 
   return (
     <>
+      {/* {console.log(moment(livetime).format("MMMM Do YYYY, h:mm:ss a"))}*/}
+      {/*} {console.log(expirytime)} */}
+      {/* {console.log(expirytime)} */}
+
       <div className="mb-24">
         <div className="pb-2 text-xl flex justify-center">
           <h1 className="my-5 py-1 px-3 bg-purple-300 text-purple-800 rounded-md w-fit">
@@ -294,47 +351,57 @@ export default function DashboardLinks({ LinksList }) {
             </div>
           </Dialog>
         </Transition>
-        {LinkData.map((element, keys) => (
-          <div
-            className="flex w-full card px-1.5 py-1.5 items-center pr-4 hover:shadow-indigo-500/40 lg:max-w-full rounded-md"
-            key={keys}
-          >
-            <div className="border-1 h-14 w-16 rounded-lg">
-              {element.linkImagName === null ? (
-                <img
-                  className="h-[inherit] object-cover border-[3px] border-purple-800 rounded-lg max-h-full w-[inherit]	"
-                  src={NoImage}
-                />
-              ) : (
-                <img
-                  className="border h-[inherit] object-cover rounded-lg max-h-full w-[inherit]"
-                  src={`../../../public/linkImage/${element.linkImagName}`}
-                />
-              )}
-            </div>
-            <div className="grid w-full space-y-2 text-center">
-              <h3 className="text-1xl text-purple-800 font-semibold lg:text-2xl">
-                {element.linkName}
-              </h3>
-            </div>
-            <div>
-              <div className="flex">
-                <button
-                  type="button"
-                  className="mx-2 text-red-600 font-medium  hover:scale-[1.3]"
-                  onClick={closeModal}
-                >
-                  <DeleteIcon onClick={() => deleteLink(element._id)} />
-                </button>
+        {/* <Draggable onPosChange={getChangedPos}> */}
+          {LinkData.map((element, keys) => (
+            <div
+              className="flex w-full card px-1.5 py-1.5 items-center pr-4 drop-shadow-2xl bg-[#ffffff80] lg:max-w-full rounded-md"
+              key={keys}
+            >
+              <div className="border-1 h-14 w-16 rounded-lg">
+                {element.linkImagName === null ? (
+                  <img
+                    className="h-[inherit] object-cover border-[3px] border-purple-800 rounded-lg max-h-full w-[inherit]	"
+                    src={NoImage}
+                  />
+                ) : (
+                  <img
+                    className="border h-[inherit] object-cover rounded-lg max-h-full w-[inherit]"
+                    src={`../../../public/linkImage/${element.linkImagName}`}
+                  />
+                )}
+              </div>
+              <div className="w-full flex justify-center items-center text-center">
+                <h3 className="text-1xl text-purple-800 font-semibold lg:text-2xl">
+                  {element.linkName}
+                </h3>
+                {element.featured ? (
+                  <p className="rounded-md mx-2  bg-purple-300/80 text-purple-900 font-bold p-[0.3rem] text-[0.50rem] flex items-center">
+                    Featured
+                  </p>
+                ) : (
+                  <p></p>
+                )}
+              </div>
+              <div>
+                <div className="flex">
+                  <button
+                    type="button"
+                    className="mx-2 text-red-600 font-medium  hover:scale-[1.3]"
+                    onClick={closeModal}
+                  >
+                    <DeleteIcon onClick={() => deleteLink(element._id)} />
+                  </button>
 
-                <EditIcon
-                  onClick={() => openUpdate(element._id)}
-                  className="cursor-pointer transition hover:ease-in-out delay-700 text-purple-800 hover:scale-[1.3] hover:text-purple-800 duration-800 "
-                />
+                  <EditIcon
+                    onClick={() => openUpdate(element._id)}
+                    className="cursor-pointer transition hover:ease-in-out delay-700 text-purple-800 hover:scale-[1.3] hover:text-purple-800 duration-800 "
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        {/* </Draggable> */}
+
         <Transition appear show={modalOpen} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={closeModal}>
             <Transition.Child
@@ -368,7 +435,8 @@ export default function DashboardLinks({ LinksList }) {
                       Edit Root
                     </Dialog.Title>
                     <hr />
-                    <form onSubmit={updateclick}>
+                    <form
+                      onSubmit={updateclick}>
                       <div className="mt-2">
                         <div className="flex">
                           <div className="w-1/2 px-1">
@@ -377,7 +445,7 @@ export default function DashboardLinks({ LinksList }) {
                                 <span
                                   className="flex items-center justify-center border-2 border-purple-800 lg:h-full md:h-full h-full focus:outline-none text-purple-900 font-medium lg:text-md text-xs  rounded-xl hover:bg-purple-800 hover:text-white hover:shadow-lg ]"
                                   style={{
-                                   backgroundImage: `url(./../../../../public/linkImage/${ModalData.linkImagName})`,
+                                    backgroundImage: `url(./../../../../public/linkImage/${ModalData.linkImagName})`,
                                     opacity: "1",
                                     backgroundRepeat: "no-repeat",
                                     backgroundSize: "102%",
@@ -427,7 +495,50 @@ export default function DashboardLinks({ LinksList }) {
                         </div>
                       </div>
 
+                      <div className="flex">
+                        <div className="p-2 py-4">
+                          <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <DateTimePicker
+                              label="Root Live Date"
+                              // inputFormat="D/D/MM/YYYY"
+                              className={classes.root}
+                              onChange={(newValue) => setLiveTime(newValue)}
+                              // onChange={(e)=>setTime(e.target.value)}
+                              defaultValue={moment(ModalData.live)}
+                            />
+                          </LocalizationProvider>
+                        </div>
+                        <div className="p-2 py-4">
+                          <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <DateTimePicker
+                              label="Root Expiration Date"
+                              className={classes.root}
+                              onChange={(newValue) => setExpirytime(newValue)}
+                              // onChange={(e)=>setTime(e.target.value)}
+                              defaultValue={moment(ModalData.expiration)}
+                            />
+                          </LocalizationProvider>
+                        </div>
+                      </div>
                       <div className="mt-4 flex justify-end">
+                        {newLinkFeatured == true ? (
+                          <button
+                            type="button"
+                            className="mx-2 inline-flex justify-center rounded-md items-center border border-purple-900 px-2 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                            onClick={() => setnewLinkFeatured(false)}
+                          >
+                            <AiFillStar fontSize="large" />
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="mx-2 inline-flex justify-center rounded-md items-center  border border-purple-900 px-2 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                            onClick={() => setnewLinkFeatured(true)}
+                          >
+                            <AiOutlineStar fontSize="large" />
+                          </button>
+                        )}
+
                         {newLinkVisiblity == true ? (
                           <button
                             type="button"
@@ -448,14 +559,14 @@ export default function DashboardLinks({ LinksList }) {
 
                         <button
                           type="button"
-                          className="inline-flex justify-center mx-2 border border-transparent text-black font-medium text-sm py-2 px-4 rounded-lg bg-gray-300 hover:bg-red-700 hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                          className="inline-flex justify-center items-center  mx-2 border border-transparent text-black font-medium text-sm py-2 px-4 rounded-lg bg-gray-300 hover:bg-red-700 hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                           onClick={closeModal}
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
-                          className="inline-flex justify-center rounded-md border border-transparent bg-purple-300 px-4 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                          className="inline-flex justify-center items-center  rounded-md border border-transparent bg-purple-300 px-4 py-2 text-sm font-medium text-purple-900 hover:bg-purple-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                         >
                           Update Root
                         </button>

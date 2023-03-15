@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+var moment = require("moment");
+
 const mongoose = require("mongoose");
 
 const ProfileSchema = new mongoose.Schema({
@@ -27,13 +29,21 @@ const ProfileSchema = new mongoose.Schema({
     type: Boolean,
     default: null,
   },
+  userStatus: {
+    type: String,
+    default: "1",
+  },
   creatoremail: {
     type: String,
     required: true,
   },
+  registeredat: {
+    type: String,
+    default: moment().format("MMM Do YYYY"),
+  },
   colorTheme: {
     type: String,
-    default: "#ff8800",
+    default: "#c04aff",
   },
   Pageviews: [],
 
@@ -52,12 +62,30 @@ const ProfileSchema = new mongoose.Schema({
         default: null,
       },
       createdAt: {
-        type: Date,
-        default: Date.now(),
+        type: String,
+        default: moment().format("MMM Do YYYY"),
       },
       visible: {
         type: Boolean,
         default: true,
+      },
+      featured: {
+        type: Boolean,
+        default: false,
+      },
+      live: {
+        type: String,
+        default: moment().format(),
+      },
+      expiration: {
+        type:String,
+        // validate: {
+        //   validator: function (value) {
+        //     return value === null || !isNaN(Date.parse(value));
+        //   },
+        //   message: "Expiration must be null or a valid date string",
+        // },
+        default: "null",
       },
       views: [],
     },
