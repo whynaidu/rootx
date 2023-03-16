@@ -28,6 +28,8 @@ export default function ProfileSettings() {
   const [isOpen, setIsOpen] = useState(false);
   const [ProfileBio, setProfileBio] = useState("");
   const [ProfileUsername, setProfileUsername] = useState("");
+  const [isgoogle, setisgoogle] = useState(false);
+
   const [newProfileName, setnewProfileName] = useState("");
   const [newProfileBio, setnewProfileBio] = useState(null);
   const [newProfileUsername, setnewProfileUsername] = useState("");
@@ -60,6 +62,8 @@ export default function ProfileSettings() {
     setProfileBio(arrayData.bio);
     setProfileEmail(arrayData.creatoremail);
     setProfileUsername(arrayData.creatorUsername);
+    setisgoogle(arrayData.glogin);
+
   };
 
   function handleProfileName(click) {
@@ -154,7 +158,7 @@ export default function ProfileSettings() {
   return (
     <>
       <Toaster position="top-right" />
-      {console.log(deleteCondition)}
+      {console.log(isgoogle)}
 
       <div className="mb-16">
         <PageHeader title={"Profile"} Icon={<PersonIcon />} />
@@ -313,14 +317,25 @@ export default function ProfileSettings() {
             </div>
           </div>
         </div>
-        <div className="bg-[#ffffff80] rounded-lg p-3 mt-5 py-4">
-          <button
-            className="bg-red-800 rounded-lg  w-full lg:w-fit py-2 px-3 text-white"
-            onClick={AddopenModal}
-          >
-            Delete Account
-          </button>
-        </div>
+              <div className="bg-[#ffffff80] rounded-lg p-3 mt-5 py-4">
+                <button
+                  className="bg-red-800 rounded-lg  w-full lg:w-fit py-2 px-3 text-white"
+                  onClick={AddopenModal}
+                >
+                  Delete Account
+                </button>
+
+          {isgoogle ?
+            <p></p>
+            :
+            <Link to="/setting/changepassword">
+                  <button className="mb-2 md:mb-0 mx-2 text-purple-800 font-bold text-sm py-2 px-4 rounded-lg w-full lg:w-fit bg-purple-300 hover:bg-purple-800 hover:text-white hover:shadow-lg">
+                    Change Password
+                  </button>
+                </Link>
+          }
+                
+              </div>
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>

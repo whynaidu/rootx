@@ -13,6 +13,7 @@ import SocialHub from "./components/dashboard/SocialLinks";
 import { RequireAuth } from "./auth/requireAuth";
 import Themes from "./components/dashboard/Themes";
 import Settings from "./components/dashboard/Settings";
+import ChangePassword from "./components/dashboard/ChangePassword";
 
 
 function App() {
@@ -77,7 +78,14 @@ function App() {
               </RequireAuth>
             }
           />
-          
+          <Route
+            path="setting/changepassword"
+            element={
+              <RequireAuth>
+                <ChangePassword />
+              </RequireAuth>
+            }
+          />
         </Route>
         <Route path="/login" element={<Login />} />
 

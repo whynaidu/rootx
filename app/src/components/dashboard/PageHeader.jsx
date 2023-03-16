@@ -1,6 +1,4 @@
 import React from 'react'
-import InsightsIcon from "@mui/icons-material/Insights";
-
 
 export default function PageHeader(props) {
   return (
