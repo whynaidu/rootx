@@ -69,7 +69,7 @@ export default function SociaLinks(props) {
             </div>
             <div>
               {socialLinks.twitch === null ? (
-                <p>sfsdf</p>
+                <p></p>
               ) : (
                 <a  target="_blank" href={socialLinks.twitch}>
                   <FaTwitch fontSize="inherit" />

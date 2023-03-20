@@ -1,6 +1,6 @@
-import "./App.css";
+import "./App.css"
 import Dashboard from "./components/dashboard/Dashboard";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import CreatorLinks from "./components/creator/CreatorLinks";
 import DashboardLinksNew from "./components/dashboard/DashboardLinksNew";
 import Analytics from "./components/dashboard/Analytics";
@@ -14,13 +14,16 @@ import { RequireAuth } from "./auth/requireAuth";
 import Themes from "./components/dashboard/Themes";
 import Settings from "./components/dashboard/Settings";
 import ChangePassword from "./components/dashboard/ChangePassword";
-
+import ForgotPassword from "./components/dashboard/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route exact path="/:username" element={<CreatorLinks />} />
+        <Route exact path="/forgotpassword" element={<ForgotPassword />} />
+        <Route exact path="/resetpassword/:token" element={<ResetPassword />} />
 
         <Route
           path="/"

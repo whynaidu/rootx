@@ -12,7 +12,6 @@ export default function TopLinks() {
       const response = await axios.get(
         `http://localhost:3001/api/topLinks/naiduvedant@gmail.com`
       );
-      console.log(response.data);
       settopLinks(response.data.linkViews);
     }
     topLinks();

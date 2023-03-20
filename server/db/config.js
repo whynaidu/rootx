@@ -1,12 +1,10 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
 mongoose
-  .connect(
-      "mongodb+srv://whynaidu:vedant@rootx.4makdgi.mongodb.net/rootx?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log(`connnection successful`);
   })

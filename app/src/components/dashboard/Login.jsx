@@ -127,7 +127,6 @@ async function loginUser(event) {
 
 useEffect(() => {
   if (auth.user && auth.token) {
-    console.log(auth.user);
     localStorage.setItem("Name", auth.user);
     localStorage.setItem("token", auth.token);
     toast.success("Login Successful");
@@ -151,7 +150,11 @@ useEffect(() => {
                     Login
                   </h1>
 
-                  <div id="signInDiv" className="flex justify-center" style={{ margin: "15px",  }}></div>
+                  <div
+                    id="signInDiv"
+                    className="flex justify-center"
+                    style={{ margin: "15px" }}
+                  ></div>
 
                   <form onSubmit={loginUser}>
                     <div className="mb-3">
@@ -189,12 +192,12 @@ useEffect(() => {
                       </button>
 
                       <div className="flex items-end lg:justify-end justify-center">
-                        <a
-                          href="#!"
+                        <Link
+                          to="/forgotPassword"
                           className="mt-6 text-purple-800 hover:text-black text-center"
                         >
                           Forgot password?
-                        </a>
+                        </Link>
                       </div>
                       <div>
                         <p className="mt-2 mb-0 pt-3 text-md font-medium ">

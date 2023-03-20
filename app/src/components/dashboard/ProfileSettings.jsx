@@ -158,8 +158,6 @@ export default function ProfileSettings() {
   return (
     <>
       <Toaster position="top-right" />
-      {console.log(isgoogle)}
-
       <div className="mb-16">
         <PageHeader title={"Profile"} Icon={<PersonIcon />} />
         <Backbutton />
@@ -319,7 +317,7 @@ export default function ProfileSettings() {
         </div>
               <div className="bg-[#ffffff80] rounded-lg p-3 mt-5 py-4">
                 <button
-                  className="bg-red-800 rounded-lg  w-full lg:w-fit py-2 px-3 text-white"
+                  className="bg-red-800 rounded-lg w-max lg:w-fit py-2 px-3 text-white"
                   onClick={AddopenModal}
                 >
                   Delete Account
@@ -329,7 +327,7 @@ export default function ProfileSettings() {
             <p></p>
             :
             <Link to="/setting/changepassword">
-                  <button className="mb-2 md:mb-0 mx-2 text-purple-800 font-bold text-sm py-2 px-4 rounded-lg w-full lg:w-fit bg-purple-300 hover:bg-purple-800 hover:text-white hover:shadow-lg">
+                  <button className="mb-2 md:mb-0 mx-2 text-purple-800 font-bold text-sm py-2 px-3 w-max rounded-lg lg:w-fit bg-purple-300 hover:bg-purple-800 hover:text-white hover:shadow-lg">
                     Change Password
                   </button>
                 </Link>

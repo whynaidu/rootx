@@ -46,6 +46,8 @@ const ProfileSchema = new mongoose.Schema({
     default: "#c04aff",
   },
   Pageviews: [],
+  resetPasswordToken: { type: String, default: undefined },
+  resetPasswordExpires: { type: String, default: undefined },
 
   Link: [
     {
@@ -78,7 +80,7 @@ const ProfileSchema = new mongoose.Schema({
         default: moment().format(),
       },
       expiration: {
-        type:String,
+        type: String,
         // validate: {
         //   validator: function (value) {
         //     return value === null || !isNaN(Date.parse(value));

@@ -5,6 +5,7 @@ import axios from "axios";
 import { useAuth } from "../../auth/auth";
 import toast, { Toaster } from "react-hot-toast";
 import Backbutton from "./Backbutton";
+import { Link } from "react-router-dom";
 
 export default function Themes() {
   // const auth = useAuth();
@@ -69,7 +70,6 @@ export default function Themes() {
         `http://localhost:3001/api/updateTheme/${auth.user}`,
         { color: color }
       );
-      console.log(response.data);
       toast.success("Theme Updated");
       setselectedColor(response.data.colorTheme);
       // select();
@@ -81,7 +81,6 @@ export default function Themes() {
 
    function select() {
      const myDiv = document.getElementById(selectedColor);
-     console.log(myDiv);
     //  myDiv.classList.add("ring-4");
    }
   
@@ -107,7 +106,6 @@ export default function Themes() {
 
   return (
     <div>
-      {console.log(selectedColor)}
       <Toaster position="top-right" />
 
       <PageHeader title={"Themes"} Icon={<MdColorLens />} />
@@ -117,14 +115,14 @@ export default function Themes() {
           <h1 className="w-full flex items-center mx-2 p-1 text-purple-800 font-medium">
             Select Theme
           </h1>
-          <a href="http://localhost:5173/vedantnaidu" target="_blank">
+          <Link to={`/${user}`}>
             <button className="px-3 pt-2 pb-2 mr-2 rounded-lg group  backdrop-blur-xl bg-purple-300 font-medium text-purple-800  hover:bg-purple-800 hover:text-purple-200">
               <span className=" flex items-center">
                 <MdVisibility />
                 &nbsp;Preview
               </span>
             </button>
-          </a>
+          </Link>
         </div>
         <div className="flex flex-col lg:flex-row">
           <div className="p-1 gap-2 grid grid-cols-3 w-full">

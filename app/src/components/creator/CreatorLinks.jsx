@@ -7,6 +7,7 @@ import axios from "axios";
 import { useParams } from "react-router";
 
 import BrandLink from "./BrandLink";
+import Backbutton from "./Backbutton";
 
 export default function CreatorLinks() {
   const username = useParams();
@@ -14,6 +15,7 @@ export default function CreatorLinks() {
 
   const [links, setLinks] = useState([]);
   const [color, setColor] = useState("");
+  const [loogedin, setloggedin] = useState(false);
   useEffect(() => {
     const fetchCreatorVisitedData = async () => {
       try {
@@ -24,11 +26,12 @@ export default function CreatorLinks() {
         console.error(error);
       }
     };
+
     fetchCreatorVisitedData();
     async function fetchLinks() {
       try {
         const response = await axios.get(url);
-        setColor(response.data[0].colorTheme)
+        setColor(response.data[0].colorTheme);
         setLinks(response.data);
       } catch (error) {
         console.log(error);
@@ -36,13 +39,18 @@ export default function CreatorLinks() {
       }
     }
 
+    const log = localStorage.getItem("Name");
+    if (log) {
+      setloggedin(true);
+    }
     fetchLinks();
   }, []);
+
   return (
     <>
       <div
         style={{
-          height:"100%",
+          height: "100%",
           maxWidth: "100%",
           backgroundImage: `linear-gradient(140deg, #fcfcfc 15%, ${color} 90%)`,
           backgroundRepeat: "no-repeat",
@@ -57,6 +65,8 @@ export default function CreatorLinks() {
           }}
         >
           <CreatorProifileCard />
+          {loogedin ? <Backbutton color={color} /> : <p></p>}
+
           {links.map((element, c) => (
             <Links
               key={c}

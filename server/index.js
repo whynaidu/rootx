@@ -1,5 +1,5 @@
 const express = require("express");
-// const CreatorLinks = require("./schema/linksSchema");
+require("dotenv").config();
 const ProfileSchema = require("./schema/profileSchema");
 const app = express();
 const cors = require("cors");
@@ -9,6 +9,10 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 const jwt_decode = require("jwt-decode");
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,9 +21,8 @@ app.use(bodyParser.raw());
 app.use(cors());
 require("./db/config");
 
-// app.use("/",(req, res, next) => {
-//     res.send("This is the express server")
-// })
+const app_url = process.env.APP_URL;
+const app_port = process.env.APP_PORT;
 
 const Storage = multer.diskStorage({
   destination: "../app/public/linkImage",
@@ -86,6 +89,7 @@ app.post("/api/googlesignup", async (req, res) => {
   const getemail = await ProfileSchema.find({
     creatoremail: email,
     userStatus: { $gte: 1 },
+    glogin: { $gte: true },
   });
 
   const uname = name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
@@ -163,11 +167,15 @@ app.post(
       };
 
       // check if an image was uploaded and update image-related fields if so
-    
+
       if (req.file) {
         // delete old image if it exists
         const oldLink = await ProfileSchema.findOne(
-          { creatoremail: email,  userStatus: { $gte: 1 }, Link: { $elemMatch: { _id: linkId } } },
+          {
+            creatoremail: email,
+            userStatus: { $gte: 1 },
+            Link: { $elemMatch: { _id: linkId } },
+          },
           { "Link.$": 1 }
         );
         const oldImagePath = path.join(
@@ -183,7 +191,11 @@ app.post(
       }
 
       const data = await ProfileSchema.findOneAndUpdate(
-        { creatoremail: email, userStatus: { $gte: 1 } , Link: { $elemMatch: { _id: linkId } } },
+        {
+          creatoremail: email,
+          userStatus: { $gte: 1 },
+          Link: { $elemMatch: { _id: linkId } },
+        },
         { $set: updateObj },
         { new: true }
       );
@@ -202,7 +214,11 @@ app.post("/api/linkClicked/:email/:id", async (req, res) => {
     const email = req.params.email;
 
     const data = await ProfileSchema.findOneAndUpdate(
-      { creatoremail: email, userStatus: { $gte: 1 } , Link: { $elemMatch: { _id: linkId } } },
+      {
+        creatoremail: email,
+        userStatus: { $gte: 1 },
+        Link: { $elemMatch: { _id: linkId } },
+      },
       { $push: { "Link.$.views": Date.now() } },
       { new: true }
     );
@@ -260,35 +276,6 @@ app.post("/api/creatorVisited/:username/", async (req, res) => {
   }
 });
 
-//   try {
-//     const email = req.params.email;
-//     const oneWeekAgo = new Date();
-//     oneWeekAgo.setDate(oneWeekAgo.getDate() - 6); // set to 6 days ago to include today
-
-//     const data = await ProfileSchema.aggregate([
-//       { $match: { creatoremail: email, Pageviews: { $gte: oneWeekAgo } } },
-//       { $unwind: "$Pageviews" },
-//       {
-//         $group: {
-//           _id: {
-//             $dateToString: {
-//               format: "%Y-%m-%d",
-//               date: { $toDate: "$Pageviews.date" }, // update to reference the date field within Pageviews
-//             },
-//           },
-//           count: { $sum: 1 },
-//         },
-//       },
-//       { $sort: { _id: 1 } },
-//     ]);
-
-//     return res.status(200).json(data);
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ error: error.message });
-//   }
-// });
-
 app.post(
   "/api/profile/:email",
   profileupload.single("profileImage"),
@@ -336,6 +323,48 @@ app.post(
   }
 );
 
+app.post("/api/changePassword/:email", async (req, res) => {
+  try {
+    const email = req.params.email;
+
+    const { currentPassword, confirmPassword } = req.body;
+
+    const user = await ProfileSchema.findOne({
+      creatoremail: email,
+      userStatus: { $gte: 1 },
+      glogin: { $gte: null },
+    });
+    // console.log(user.password)
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (isPasswordValid) {
+      // console.log(currentPassword);
+      const hashnewPassword = await bcrypt.hash(confirmPassword, 10);
+      let update = {
+        password: hashnewPassword,
+      };
+
+      const data = await ProfileSchema.findOneAndUpdate(
+        { creatoremail: email, userStatus: { $gte: 1 } },
+        update,
+        {
+          new: true,
+        }
+      );
+      return res.status(200).send("Password Change Succesfull");
+    } else {
+      res.status(406).send("Invalid");
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 app.post("/api/updateTheme/:email", async (req, res) => {
   try {
     const email = req.params.email;
@@ -382,10 +411,10 @@ app.post("/api/login", async (req, res) => {
         name: user.creatorname,
         email: user.creatoremail,
       },
-      "secret123"
+      process.env.SECRET
     );
 
-    return res.status(200).send({user: user, token: token });
+    return res.status(200).send({ user: user, token: token });
   } else {
     return res.status(401).send("Invalid User Credentials");
   }
@@ -400,6 +429,7 @@ app.post("/api/googlelogin", async (req, res) => {
     const user = await ProfileSchema.findOne({
       creatoremail: Payload.email,
       userStatus: { $gte: 1 },
+      glogin: { $gte: true },
     });
 
     if (!user) {
@@ -413,7 +443,7 @@ app.post("/api/googlelogin", async (req, res) => {
           name: user.creatorname,
           email: user.creatoremail,
         },
-        "secret123"
+        process.env.SECRET
       );
       return res.status(200).send({ user: user, token: token });
     }
@@ -423,69 +453,22 @@ app.post("/api/googlelogin", async (req, res) => {
   }
 });
 
-// app.post("/api/login", async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     // Validate email and password inputs
-//     if (!email || !password) {
-//       return res.status(400).json({ error: "Email and password are required" });
-//     }
-
-//     const user = await ProfileSchema.findOne({ creatoremail: email });
-
-//     // Check if user with provided email exists
-//     if (!user) {
-//       return res.status(401).json({ error: "Invalid login" });
-//     }
-
-//     // Check if password is correct
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-
-//     if (!isPasswordValid) {
-//       return res.status(401).json({ error: "Invalid login" });
-//     }
-
-//     // Generate JWT token
-//     const token = jwt.sign(
-//       {
-//         id: user._id,
-//         name: user.name,
-//         email: user.email,
-//       },
-//       process.env.JWT_SECRET,
-//       {
-//         expiresIn: "1h", // Token expiration time
-//       }
-//     );
-
-//     // Return success response with token and user data
-//     res.status(200).json({ token, user });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Server error" });
-//   }
-// });
-
 app.post("/api/deleteLink/:username/:id", async (req, res) => {
   try {
     const username = req.params.username;
     const linkId = req.params.id;
 
-    // find the link that needs to be deleted
     const profile = await ProfileSchema.findOne({
       creatoremail: username,
       userStatus: { $gte: 1 },
     });
     const link = profile.Link.find((link) => link._id == linkId);
 
-    // delete the associated image file, if it exists
     if (link && link.linkImagName) {
       const filePath = `../app/public/linkImage/${link.linkImagName}`;
       fs.unlinkSync(filePath);
     }
 
-    // remove the link from the Link array
     const deleteLink = await ProfileSchema.findOneAndUpdate(
       { creatoremail: username, userStatus: { $gte: 1 } },
       { $pull: { Link: { _id: linkId } } },
@@ -511,7 +494,10 @@ app.post("/api/deleteAllLink/:email/", async (req, res) => {
 app.get("/creator/:email", async (req, res) => {
   try {
     const email = req.params.email;
-    const data = await ProfileSchema.find({ creatoremail: email, userStatus: { $gte: 1 } });
+    const data = await ProfileSchema.find({
+      creatoremail: email,
+      userStatus: { $gte: 1 },
+    });
 
     if (data.length === 0) {
       return res.status(404).send(`No user found with email: ${email}`);
@@ -548,7 +534,7 @@ app.get("/api/getUserLinks/:email/:linkid", async (req, res) => {
   const data = await ProfileSchema.find(
     {
       creatoremail: email,
-       userStatus: { $gte: 1 } ,
+      userStatus: { $gte: 1 },
       Link: {
         $elemMatch: { _id: linkId },
       },
@@ -588,6 +574,566 @@ app.post("/deleteall", async (req, res) => {
   res.send(data);
 });
 
+app.post("/api/forgot", async (req, res) => {
+  try {
+    let email = req.body.email;
+    loweremail = email.toLowerCase();
+
+    const userData = await ProfileSchema.findOne({ creatoremail: loweremail });
+
+    if (userData) {
+      const token = crypto.randomBytes(20).toString("hex");
+
+      // Set token expiration time to 10 minutes from now
+      const now = new Date();
+      const expiration = new Date(now.getTime() + 10 * 60 * 1000); // 10 minutes from now
+
+      // Save token and expiration time to the user's profile
+      userData.resetPasswordToken = token;
+      userData.resetPasswordExpires = expiration;
+
+      await userData.save();
+
+      const mailOptions = {
+        to: userData.creatoremail,
+        from: process.env.SENDGRID_SENDER_MAIL,
+        subject: "Rootx Password Reset",
+        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
+    <title></title>
+    <style type="text/css" rel="stylesheet" media="all">
+    /* Base ------------------------------ */
+    
+    @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&display=swap");
+    body {
+      width: 100% !important;
+      height: 100%;
+      margin: 0;
+      -webkit-text-size-adjust: none;
+    }
+    
+    a {
+      color: #3869D4;
+    }
+    
+    a img {
+      border: none;
+    }
+    
+    td {
+      word-break: break-word;
+    }
+    
+    .preheader {
+      display: none !important;
+      visibility: hidden;
+      mso-hide: all;
+      font-size: 1px;
+      line-height: 1px;
+      max-height: 0;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    /* Type ------------------------------ */
+    
+    body,
+    td,
+    th {
+      font-family: "Nunito Sans", Helvetica, Arial, sans-serif;
+    }
+    
+    h1 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    h2 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    h3 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    td,
+    th {
+      font-size: 16px;
+    }
+    
+    p,
+    ul,
+    ol,
+    blockquote {
+      margin: .4em 0 1.1875em;
+      font-size: 16px;
+      line-height: 1.625;
+    }
+    
+    p.sub {
+      font-size: 13px;
+    }
+    /* Utilities ------------------------------ */
+    
+    .align-right {
+      text-align: right;
+    }
+    
+    .align-left {
+      text-align: left;
+    }
+    
+    .align-center {
+      text-align: center;
+    }
+    
+    .u-margin-bottom-none {
+      margin-bottom: 0;
+    }
+    /* Buttons ------------------------------ */
+    
+    .button {
+      background-color: #3869D4;
+      border-top: 10px solid #3869D4;
+      border-right: 18px solid #3869D4;
+      border-bottom: 10px solid #3869D4;
+      border-left: 18px solid #3869D4;
+      display: inline-block;
+      color: #FFF;
+      text-decoration: none;
+      border-radius: 3px;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
+      -webkit-text-size-adjust: none;
+      box-sizing: border-box;
+    }
+    
+    .button--green {
+      background-color: #22BC66;
+      border-top: 10px solid #22BC66;
+      border-right: 18px solid #22BC66;
+      border-bottom: 10px solid #22BC66;
+      border-left: 18px solid #22BC66;
+    }
+    
+    .button--red {
+      background-color: #FF6136;
+      border-top: 10px solid #FF6136;
+      border-right: 18px solid #FF6136;
+      border-bottom: 10px solid #FF6136;
+      border-left: 18px solid #FF6136;
+    }
+    
+    @media only screen and (max-width: 500px) {
+      .button {
+        width: 100% !important;
+        text-align: center !important;
+      }
+    }
+    /* Attribute list ------------------------------ */
+    
+    .attributes {
+      margin: 0 0 21px;
+    }
+    
+    .attributes_content {
+      background-color: #F4F4F7;
+      padding: 16px;
+    }
+    
+    .attributes_item {
+      padding: 0;
+    }
+    /* Related Items ------------------------------ */
+    
+    .related {
+      width: 100%;
+      margin: 0;
+      padding: 25px 0 0 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .related_item {
+      padding: 10px 0;
+      color: #CBCCCF;
+      font-size: 15px;
+      line-height: 18px;
+    }
+    
+    .related_item-title {
+      display: block;
+      margin: .5em 0 0;
+    }
+    
+    .related_item-thumb {
+      display: block;
+      padding-bottom: 10px;
+    }
+    
+    .related_heading {
+      border-top: 1px solid #CBCCCF;
+      text-align: center;
+      padding: 25px 0 10px;
+    }
+    /* Discount Code ------------------------------ */
+    
+    .discount {
+      width: 100%;
+      margin: 0;
+      padding: 24px;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #F4F4F7;
+      border: 2px dashed #CBCCCF;
+    }
+    
+    .discount_heading {
+      text-align: center;
+    }
+    
+    .discount_body {
+      text-align: center;
+      font-size: 15px;
+    }
+    /* Social Icons ------------------------------ */
+    
+    .social {
+      width: auto;
+    }
+    
+    .social td {
+      padding: 0;
+      width: auto;
+    }
+    
+    .social_icon {
+      height: 20px;
+      margin: 0 8px 10px 8px;
+      padding: 0;
+    }
+    /* Data table ------------------------------ */
+    
+    .purchase {
+      width: 100%;
+      margin: 0;
+      padding: 35px 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .purchase_content {
+      width: 100%;
+      margin: 0;
+      padding: 25px 0 0 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .purchase_item {
+      padding: 10px 0;
+      color: #51545E;
+      font-size: 15px;
+      line-height: 18px;
+    }
+    
+    .purchase_heading {
+      padding-bottom: 8px;
+      border-bottom: 1px solid #EAEAEC;
+    }
+    
+    .purchase_heading p {
+      margin: 0;
+      color: #85878E;
+      font-size: 12px;
+    }
+    
+    .purchase_footer {
+      padding-top: 15px;
+      border-top: 1px solid #EAEAEC;
+    }
+    
+    .purchase_total {
+      margin: 0;
+      text-align: right;
+      font-weight: bold;
+      color: #333333;
+    }
+    
+    .purchase_total--label {
+      padding: 0 15px 0 0;
+    }
+    
+    body {
+      background-color: #F2F4F6;
+      color: #51545E;
+    }
+    
+    p {
+      color: #51545E;
+    }
+    
+    .email-wrapper {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #F2F4F6;
+    }
+    
+    .email-content {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    /* Masthead ----------------------- */
+    
+    .email-masthead {
+      padding: 25px 0;
+      text-align: center;
+    }
+    
+    .email-masthead_logo {
+      width: 94px;
+    }
+    
+    .email-masthead_name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #A8AAAF;
+      text-decoration: none;
+      text-shadow: 0 1px 0 white;
+    }
+    /* Body ------------------------------ */
+    
+    .email-body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .email-body_inner {
+      width: 570px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 570px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+    }
+    
+    .email-footer {
+      width: 570px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 570px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+    
+    .email-footer p {
+      color: #A8AAAF;
+    }
+    
+    .body-action {
+      width: 100%;
+      margin: 30px auto;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+    
+    .body-sub {
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 1px solid #EAEAEC;
+    }
+    
+    .content-cell {
+      padding: 45px;
+    }
+    /*Media Queries ------------------------------ */
+    
+    @media only screen and (max-width: 600px) {
+      .email-body_inner,
+      .email-footer {
+        width: 100% !important;
+      }
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      body,
+      .email-body,
+      .email-body_inner,
+      .email-content,
+      .email-wrapper,
+      .email-masthead,
+      .email-footer {
+        background-color: #333333 !important;
+        color: #FFF !important;
+      }
+      p,
+      ul,
+      ol,
+      blockquote,
+      h1,
+      h2,
+      h3,
+      span,
+      .purchase_item {
+        color: #FFF !important;
+      }
+      .attributes_content,
+      .discount {
+        background-color: #222 !important;
+      }
+      .email-masthead_name {
+        text-shadow: none !important;
+      }
+    }
+    
+    :root {
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+    }
+    </style>
+    <!--[if mso]>
+    <style type="text/css">
+      .f-fallback  {
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  <![endif]-->
+  </head>
+  <body>
+    <span class="preheader">Use this link to reset your password. The link is only valid for 24 hours.</span>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center">
+          <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td class="email-masthead">
+                <a href="https://example.com" class="f-fallback email-masthead_name">
+                RootX
+              </a>
+              </td>
+            </tr>
+            <!-- Email Body -->
+            <tr>
+              <td class="email-body" width="570" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <!-- Body content -->
+                  <tr>
+                    <td class="content-cell">
+                      <div class="f-fallback">
+                        <h1>Hi ${userData.creatorname},</h1>
+                        <p>You recently requested to reset your password for your Rootx account. Use the button below to reset it. <strong>This password reset is only valid for the next 10 Minutes.</strong></p>
+                        <!-- Action -->
+                        <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                          <tr>
+                            <td align="center">
+                              <!-- Border based button
+           https://litmus.com/blog/a-guide-to-bulletproof-buttons-in-email-design -->
+                              <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+                                <tr>
+                                  <td align="center">
+                                    <a href="${app_url}:${app_port}/resetpassword/${token}" class="f-fallback button button--green" target="_blank">Reset your password</a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <p>If you did not request a password reset, please ignore this email or <a href="${app_url}">contact support</a> if you have questions.</p>
+                        <p>Thanks,
+                          <br>The Rootx team</p>
+                        <!-- Sub copy -->
+                        <table class="body-sub" role="presentation">
+                          <tr>
+                            <td>
+                              <p class="f-fallback sub">If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>
+                              <p class="f-fallback sub">${app_url}:${app_port}/resetpassword/${token}</p>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <tr>
+                    <td class="content-cell" align="center">
+                      <p class="f-fallback sub align-center">
+                        [Company Name, LLC]
+                        <br>1234 Street Rd.
+                        <br>Suite 1234
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`,
+      };
+
+      sgMail
+        .send(mailOptions)
+        .catch((error) =>
+          console.log("Failed to send email", error.response.body)
+        );
+
+      res.status(200).send("Email sent");
+    }
+
+  } catch (error) {
+    console.log("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("reset/:tokem", async(req, res) => {
+  console.log("bhbjhbsdf")
+})
 app.listen(3001, () => {
   console.log(`server is runnig at port no 3001`);
 });

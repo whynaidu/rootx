@@ -11,7 +11,7 @@ import DashboardSidebar from "./DashboardSidebar";
 
 export default function DashboardLinksNew() {
   const auth = useAuth();
-    const url = `http://localhost:3001/creator/${auth.user}`;
+  const url = `http://localhost:3001/creator/${auth.user}`;
 
   const [userData, setUserData] = useState([]);
   const [creatorName, setCreatorName] = useState("");
@@ -30,33 +30,31 @@ export default function DashboardLinksNew() {
       auth.setToken(tokenValue);
     }
     if (auth.user) {
-    fetchData();
+      fetchData();
     }
-    fetchData();
   }, [auth.user]);
 
-
- async function fetchData() {
-   try {
-     const response = await axios.get(url);
-     if (response && response.data && response.data.length > 0) {
-       setUserData(response.data);
-       const creatorData = response.data[0];
-       setCreatorName(creatorData.creatorname);
-       setProfile({
-         name: creatorData.creatorname,
-         username: creatorData.creatorUsername,
-         logo: creatorData.logo,
-         bio: creatorData.bio,
-         color:creatorData.colorTheme
-       });
-     } else {
-       console.log("No data returned from server.");
-     }
-   } catch (error) {
-     console.error(error);
-   }
- }
+  async function fetchData() {
+    try {
+      const response = await axios.get(url);
+      if (response && response.data && response.data.length > 0) {
+        setUserData(response.data);
+        const creatorData = response.data[0];
+        setCreatorName(creatorData.creatorname);
+        setProfile({
+          name: creatorData.creatorname,
+          username: creatorData.creatorUsername,
+          logo: creatorData.logo,
+          bio: creatorData.bio,
+          color: creatorData.colorTheme,
+        });
+      } else {
+        console.log("No data returned from server.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div
@@ -76,4 +74,3 @@ export default function DashboardLinksNew() {
     </div>
   );
 }
-

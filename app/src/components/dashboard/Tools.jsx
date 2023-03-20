@@ -12,45 +12,21 @@ import logo from "../../assets/react.svg";
 import { FiMail } from "react-icons/fi";
 
 import {
-  FaTwitch,
-  FaTiktok,
   FaFacebook,
-  FaInstagram,
-  FaTelegramPlane,
-  FaYoutube,
   FaWhatsapp,
   FaTwitter,
   FaLinkedin,
-  FaDribbble,
-  FaPinterest,
-  FaSnapchat,
-  FaSpotify,
   FaFacebookMessenger,
-  FaMailBulk,
 } from "react-icons/fa";
 import {
   EmailShareButton,
-  FacebookMessengerIcon,
   FacebookMessengerShareButton,
   FacebookShareButton,
-  HatenaShareButton,
-  InstapaperShareButton,
-  LineShareButton,
   LinkedinShareButton,
-  LivejournalShareButton,
-  MailruShareButton,
-  OKShareButton,
-  PinterestShareButton,
-  PocketShareButton,
-  RedditShareButton,
-  TelegramShareButton,
-  TumblrShareButton,
   TwitterShareButton,
-  ViberShareButton,
-  VKShareButton,
   WhatsappShareButton,
-  WorkplaceShareButton,
 } from "react-share";
+import { Link } from "react-router-dom";
 export default function Tools(props) {
   let [modalOpen, setIsOpenModal] = useState(false);
   let [sharemodalOpen, setIsshareOpenModal] = useState(false);
@@ -102,15 +78,17 @@ export default function Tools(props) {
     <div>
       <Toaster position="top-right" className="bg-[#ffffff80] " />
       <div className="lg:flex grid gap-2 grid-cols-2">
-        <button
-          className="px-5 py-2.5 relative rounded w-full group overflow-hidden font-medium backdrop-blur-xl bg-[#ffffff80] text-purple-800 inline-block hover:bg-purple-800 hover:text-purple-200 drop-shadow-2xl"
-          onClick={openUrl}
-        >
-          <span className="relative">
-            <VisibilityIcon />
-            &nbsp; Preview
-          </span>
-        </button>
+        <Link to={`/${Tools}`}>
+          <button
+            className="px-5 py-2.5 relative rounded lg:w-44 w-full  group overflow-hidden font-medium backdrop-blur-xl bg-[#ffffff80] text-purple-800 inline-block hover:bg-purple-800 hover:text-purple-200 drop-shadow-2xl"
+            // onClick={openUrl}
+          >
+            <span className="relative">
+              <VisibilityIcon />
+              &nbsp; Preview
+            </span>
+          </button>
+        </Link>
 
         <button
           className="px-5 py-2.5 relative rounded  w-full group overflow-hidden font-medium backdrop-blur-xl bg-[#ffffff80] text-purple-800 inline-block hover:bg-purple-800 hover:text-purple-200 drop-shadow-2xl"
