@@ -1144,27 +1144,42 @@ app.post("/api/verifyToken/:token", async (req, res) => {
   if (verify) {
     const expirationTime = verify.resetPasswordExpires;
     if (expirationTime > Date.now()) {
-      verify.resetPasswordToken = undefined;
-      verify.resetPasswordExpires = undefined;
-      await verify.save();
+      // verify.resetPasswordToken = undefined;
+      // verify.resetPasswordExpires = undefined;
+      // await verify.save();
 
       res.status(200).send(verify);
     } else {
-
       return res.send({
         error: "Password reset token has expired.",
       });
     }
   } else {
-
     return res.send({
       error: "Password reset token is invalid or has expired.",
     });
   }
 });
 
-app.post("reset/:tokem", async (req, res) => {
-  console.log("bhbjhbsdf");
+app.post("/api/resetPassword/:token", async (req, res) => {
+  const gettoken = req.params.token;
+  const { confirmPassword } = req.body;
+
+  const verify = await ProfileSchema.findOne({
+    resetPasswordToken: req.params.token,
+  });
+  if (verify) {
+    verify.resetPasswordToken = undefined;
+    verify.resetPasswordExpires = undefined;
+    const hashnewPassword = await bcrypt.hash(confirmPassword, 10);
+    verify.password = hashnewPassword;
+
+    await verify.save();
+
+    return res.status(200).send("Password Change Succesfull");
+  } else {
+    res.status(406).send("Invalid");
+  }
 });
 app.listen(3001, () => {
   console.log(`server is runnig at port no 3001`);
