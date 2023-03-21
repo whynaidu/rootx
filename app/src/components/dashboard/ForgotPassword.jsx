@@ -22,9 +22,12 @@ export default function ForgotPassword() {
       toast.success(resp.data);
       setemailSent(true);
     } catch (error) {
-      console.log(error);
+      if (error.response.status === 501) {
+        toast.error(error.response.data);
+      }
     }
   };
+
   return (
     <div>
       <div>

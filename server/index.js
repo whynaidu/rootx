@@ -579,14 +579,16 @@ app.post("/api/forgot", async (req, res) => {
     let email = req.body.email;
     loweremail = email.toLowerCase();
 
-    const userData = await ProfileSchema.findOne({ creatoremail: loweremail });
+    const userData = await ProfileSchema.findOne({
+      creatoremail: loweremail,
+      glogin: null,
+      userStatus: { $gte: 1 },
+    });
 
     if (userData) {
       const token = crypto.randomBytes(20).toString("hex");
 
-      // Set token expiration time to 10 minutes from now
-      const now = new Date();
-      const expiration = new Date(now.getTime() + 10 * 60 * 1000); // 10 minutes from now
+      const expiration = Date.now() + 120000;
 
       // Save token and expiration time to the user's profile
       userData.resetPasswordToken = token;
@@ -1123,17 +1125,47 @@ app.post("/api/forgot", async (req, res) => {
         );
 
       res.status(200).send("Email sent");
+    } else {
+      res.status(501).send("User Not found");
     }
-
   } catch (error) {
     console.log("Error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
-app.post("reset/:tokem", async(req, res) => {
-  console.log("bhbjhbsdf")
-})
+app.post("/api/verifyToken/:token", async (req, res) => {
+  const gettoken = req.params.token;
+
+  const verify = await ProfileSchema.findOne({
+    resetPasswordToken: req.params.token,
+  });
+
+  if (verify) {
+    const expirationTime = verify.resetPasswordExpires;
+    if (expirationTime > Date.now()) {
+      verify.resetPasswordToken = undefined;
+      verify.resetPasswordExpires = undefined;
+      await verify.save();
+
+      res.status(200).send(verify);
+    } else {
+
+      return res.send({
+        error: "Password reset token has expired.",
+      });
+    }
+  } else {
+
+    return res.send({
+      error: "Password reset token is invalid or has expired.",
+    });
+  }
+});
+
+app.post("reset/:tokem", async (req, res) => {
+  console.log("bhbjhbsdf");
+});
 app.listen(3001, () => {
   console.log(`server is runnig at port no 3001`);
 });
