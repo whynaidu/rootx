@@ -10,6 +10,7 @@ export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const[passwordmatched,setpasswordmatched] = useState(false)
   const [error, setError] = useState("");
   const auth = useAuth();
   useEffect(() => {
@@ -18,6 +19,18 @@ export default function ChangePassword() {
       auth.setUser(tokenValue);
     }
   }, []);
+
+    useEffect(() => {
+      if (newPassword === "" && confirmPassword === "") {
+        setpasswordmatched(false);
+      }
+
+      if (newPassword === confirmPassword) {
+        setpasswordmatched(true);
+      } else {
+        setpasswordmatched(false);
+      }
+    }, [newPassword, confirmPassword]);
 
   const handleCurrentPasswordChange = (event) => {
     setCurrentPassword(event.target.value);
@@ -110,12 +123,21 @@ export default function ChangePassword() {
                 </button>
               </Link>
 
-              <button
-                type="submit"
-                className="mb-2 md:mb-0 text-purple-900 font-medium text-sm py-2 px-4 rounded-lg w-max lg:w-fit bg-purple-300/90 hover:bg-purple-800 hover:text-white hover:shadow-lg"
-              >
-                Change Password
-              </button>
+              {passwordmatched ? (
+                <button
+                  type="submit"
+                  className="mb-2 md:mb-0 text-purple-900 font-medium text-sm py-2 px-4 rounded-lg w-max lg:w-fit bg-purple-300/90 hover:bg-purple-800 hover:text-white hover:shadow-lg"
+                >
+                  Change Password
+                </button>
+              ) : (
+                  <button
+                    type="button"
+                  className="mb-2 md:mb-0 text-purple-400 font-medium text-sm py-2 px-4 rounded-lg w-max lg:w-fit bg-purple-200 cursor-not-allowed"
+                >
+                  Change Password
+                </button>
+              )}
             </div>
           </div>
         </form>

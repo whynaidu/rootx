@@ -293,8 +293,8 @@ export default function Tools(props) {
                       <div className=" flex justify-center">
                         <EmailShareButton
                           url={`http://localhost:5173/${Tools}`}
-                          title="HI've just updated my Rootx with my latest content - check it out here!"
-                          body="body"
+                          subject="HI've just updated my Rootx with my latest content - check it out here!"
+                          body="HI've just updated my Rootx with my latest content - check it out here!"
                           className="Demo__some-network__share-button"
                         >
                           <FiMail className="lg:text-8xl text-4xl " />
