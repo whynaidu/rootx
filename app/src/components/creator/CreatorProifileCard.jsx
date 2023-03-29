@@ -1,42 +1,36 @@
-import React from 'react'
+import React from "react";
 import Image from "../../assets/profileImage.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 
-
-
-
-
 export default function CreatorProifileCard() {
   const navigate = useNavigate();
 
- const username = useParams();
- const url = `http://localhost:3001/${username.username}`;
+  const username = useParams();
+  const url = `http://localhost:3001/${username.username}`;
 
- const [creator, setCreator] = useState([]);
+  const [creator, setCreator] = useState([]);
 
- useEffect(() => {
-async function fetchCreator() {
-  try {
-    const res = await axios.get(url);
-    setCreator(res.data[0]);
-    
-  } catch (error) {
-    if (error.response && error.response.status === 404) {
-      navigate("/notfound");
-    } else {
-      console.log(error);
-      // Handle other errors here
+  useEffect(() => {
+    async function fetchCreator() {
+      try {
+        const res = await axios.get(url);
+        setCreator(res.data[0]);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          navigate("/notfound");
+        } else {
+          console.log(error);
+          // Handle other errors here
+        }
+      }
     }
-  }
-}
 
- // Call the function to fetch the creator data
- fetchCreator();
-
- }, []);
+    // Call the function to fetch the creator data
+    fetchCreator();
+  }, []);
 
   return (
     <>
@@ -46,11 +40,15 @@ async function fetchCreator() {
             <div className="pulseLoader relative h-full"></div>
             {creator.logo === null ? (
               <img
+                onContextMenu={(event) => event.preventDefault()}
+                onDragStart={(event) => event.preventDefault()}
                 className={`absolute ring-2 ring-[${creator.colorTheme}] rounded-full h-[inherit]`}
                 src={Image}
               />
             ) : (
               <img
+                onContextMenu={(event) => event.preventDefault()}
+                onDragStart={(event) => event.preventDefault()}
                 className={`absolute ring-2 ring-[${creator.colorTheme}] w-20 rounded-full h-[inherit]`}
                 src={`../../../public/profileImage/${creator.logo}`}
               />

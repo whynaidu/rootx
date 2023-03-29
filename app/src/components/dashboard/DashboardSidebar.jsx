@@ -10,8 +10,6 @@ import { IoMdSettings } from "react-icons/io";
 import { IoAnalyticsSharp, IoHome } from "react-icons/io5";
 import { FaRss } from "react-icons/fa";
 
-
-
 export default function DashboardSidebar() {
   const auth = useAuth();
   const [CreatorName, setCreatorName] = useState();
@@ -82,11 +80,15 @@ export default function DashboardSidebar() {
         <div className="flex flex-col items-center mt-6 mx-2">
           {CreatorImage === null ? (
             <img
+              onContextMenu={(event) => event.preventDefault()}
+              onDragStart={(event) => event.preventDefault()}
               className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
               src={ProfileImg}
             />
           ) : (
             <img
+              onContextMenu={(event) => event.preventDefault()}
+              onDragStart={(event) => event.preventDefault()}
               className="object-cover w-20 ring-2 ring-purple-500 h-20 mx-2 rounded-full"
               src={`../../../public/profileImage/${CreatorImage}`}
             />

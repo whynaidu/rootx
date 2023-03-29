@@ -15,21 +15,25 @@ export default function ProfileCard(props) {
   useEffect(() => {
     setProfileData(props.profile);
     setglogin(profileData.logo);
-  },[props]);
+  }, [props]);
 
   return (
     <div>
       <div className="flex card items-center rounded-lg py-5 px-5 drop-shadow-2xl">
         <div className="flex h-16">
           <div className="pulseLoader2 relative h-full"></div>
-          
+
           {profileData.logo === null ? (
             <img
               className="absolute ring-2 ring-purple-500 rounded-full w-16 h-16"
               src={ProfileImg}
+              onContextMenu={(event) => event.preventDefault()}
+              onDragStart={(event) => event.preventDefault()}
             />
           ) : (
             <img
+              onContextMenu={(event) => event.preventDefault()}
+              onDragStart={(event) => event.preventDefault()}
               className="absolute ring-2 ring-purple-500 rounded-full w-16 h-16"
               src={`../../../public/profileImage/${profileData.logo}`}
             />

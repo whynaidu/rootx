@@ -186,9 +186,9 @@ export default function DashboardLinks({ LinksList }) {
       });
   }
 
-  function getChangedPos (currentPos, newPos){
+  function getChangedPos(currentPos, newPos) {
     console.log(currentPos, newPos);
-  };
+  }
 
   async function deleteLink(id) {
     try {
@@ -352,54 +352,58 @@ export default function DashboardLinks({ LinksList }) {
           </Dialog>
         </Transition>
         {/* <Draggable onPosChange={getChangedPos}> */}
-          {LinkData.map((element, keys) => (
-            <div
-              className="flex w-full card px-1.5 py-1.5 items-center pr-4 drop-shadow-2xl bg-[#ffffff80] lg:max-w-full rounded-md"
-              key={keys}
-            >
-              <div className="border-1 h-14 w-16 rounded-lg">
-                {element.linkImagName === null ? (
-                  <img
-                    className="h-[inherit] object-cover border-[3px] border-purple-800 rounded-lg max-h-full w-[inherit]	"
-                    src={NoImage}
-                  />
-                ) : (
-                  <img
-                    className="border h-[inherit] object-cover rounded-lg max-h-full w-[inherit]"
-                    src={`../../../public/linkImage/${element.linkImagName}`}
-                  />
-                )}
-              </div>
-              <div className="w-full flex justify-center items-center text-center">
-                <h3 className="text-1xl text-purple-800 font-semibold lg:text-2xl">
-                  {element.linkName}
-                </h3>
-                {element.featured ? (
-                  <p className="rounded-md mx-2  bg-purple-300/80 text-purple-900 font-bold p-[0.3rem] text-[0.50rem] flex items-center">
-                    Featured
-                  </p>
-                ) : (
-                  <p></p>
-                )}
-              </div>
-              <div>
-                <div className="flex">
-                  <button
-                    type="button"
-                    className="mx-2 text-red-600 font-medium  hover:scale-[1.3]"
-                    onClick={closeModal}
-                  >
-                    <DeleteIcon onClick={() => deleteLink(element._id)} />
-                  </button>
+        {LinkData.map((element, keys) => (
+          <div
+            className="flex w-full card px-1.5 py-1.5 items-center pr-4 drop-shadow-2xl bg-[#ffffff80] lg:max-w-full rounded-md"
+            key={keys}
+          >
+            <div className="border-1 h-14 w-16 rounded-lg">
+              {element.linkImagName === null ? (
+                <img
+                  onContextMenu={(event) => event.preventDefault()}
+                  onDragStart={(event) => event.preventDefault()}
+                  className="h-[inherit] object-cover border-[3px] border-purple-800 rounded-lg max-h-full w-[inherit]	"
+                  src={NoImage}
+                />
+              ) : (
+                <img
+                  onContextMenu={(event) => event.preventDefault()}
+                  onDragStart={(event) => event.preventDefault()}
+                  className="border h-[inherit] object-cover rounded-lg max-h-full w-[inherit]"
+                  src={`../../../public/linkImage/${element.linkImagName}`}
+                />
+              )}
+            </div>
+            <div className="w-full flex justify-center items-center text-center">
+              <h3 className="text-1xl text-purple-800 font-semibold lg:text-2xl">
+                {element.linkName}
+              </h3>
+              {element.featured ? (
+                <p className="rounded-md mx-2  bg-purple-300/80 text-purple-900 font-bold p-[0.3rem] text-[0.50rem] flex items-center">
+                  Featured
+                </p>
+              ) : (
+                <p></p>
+              )}
+            </div>
+            <div>
+              <div className="flex">
+                <button
+                  type="button"
+                  className="mx-2 text-red-600 font-medium  hover:scale-[1.3]"
+                  onClick={closeModal}
+                >
+                  <DeleteIcon onClick={() => deleteLink(element._id)} />
+                </button>
 
-                  <EditIcon
-                    onClick={() => openUpdate(element._id)}
-                    className="cursor-pointer transition hover:ease-in-out delay-700 text-purple-800 hover:scale-[1.3] hover:text-purple-800 duration-800 "
-                  />
-                </div>
+                <EditIcon
+                  onClick={() => openUpdate(element._id)}
+                  className="cursor-pointer transition hover:ease-in-out delay-700 text-purple-800 hover:scale-[1.3] hover:text-purple-800 duration-800 "
+                />
               </div>
             </div>
-          ))}
+          </div>
+        ))}
         {/* </Draggable> */}
 
         <Transition appear show={modalOpen} as={Fragment}>
@@ -435,8 +439,7 @@ export default function DashboardLinks({ LinksList }) {
                       Edit Root
                     </Dialog.Title>
                     <hr />
-                    <form
-                      onSubmit={updateclick}>
+                    <form onSubmit={updateclick}>
                       <div className="mt-2">
                         <div className="flex">
                           <div className="w-1/2 px-1">

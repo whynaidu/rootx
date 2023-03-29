@@ -76,6 +76,8 @@ export default function Links(props) {
                       <div></div>
                     ) : (
                       <img
+                        onContextMenu={(event) => event.preventDefault()}
+                        onDragStart={(event) => event.preventDefault()}
                         src={`../../../public/linkImage/${element.linkImagName}`}
                         alt=""
                         className="border h-[inherit] object-cover rounded-lg max-h-full w-[inherit]"

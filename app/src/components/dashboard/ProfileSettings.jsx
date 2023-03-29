@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ProfileSettings() {
   const auth = useAuth();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [ImageData, setImageData] = useState(null);
   const [UpdateProfileImage, setUpdateProfileImage] = useState(null);
@@ -63,7 +63,6 @@ export default function ProfileSettings() {
     setProfileEmail(arrayData.creatoremail);
     setProfileUsername(arrayData.creatorUsername);
     setisgoogle(arrayData.glogin);
-
   };
 
   function handleProfileName(click) {
@@ -135,14 +134,14 @@ export default function ProfileSettings() {
     }
   }
 
-    function logout() {
-      auth.setUser(null);
-      auth.setToken(null);
-      localStorage.removeItem("Name");
-      localStorage.removeItem("token");
+  function logout() {
+    auth.setUser(null);
+    auth.setToken(null);
+    localStorage.removeItem("Name");
+    localStorage.removeItem("token");
 
-      navigate("/login");
-    }
+    navigate("/login");
+  }
 
   async function deleteCreator() {
     try {
@@ -152,7 +151,6 @@ export default function ProfileSettings() {
       if (deleteuser.status === 200) {
         logout();
       }
-      
     } catch {}
   }
   return (
@@ -182,11 +180,23 @@ export default function ProfileSettings() {
                             <div className="lg:w-20 lg:h-20 w-16 h-16 lg:mr-4 mr-3 flex-none rounded-full ring-2 ring-purple-800 border overflow-hidden">
                               {ImageData === null ? (
                                 <img
+                                  onContextMenu={(event) =>
+                                    event.preventDefault()
+                                  }
+                                  onDragStart={(event) =>
+                                    event.preventDefault()
+                                  }
                                   className="lg:w-20 lg:h-20 w-16 h-16 mr-4 object-cover"
                                   src={ProfileImg}
                                 />
                               ) : (
                                 <img
+                                  onContextMenu={(event) =>
+                                    event.preventDefault()
+                                  }
+                                  onDragStart={(event) =>
+                                    event.preventDefault()
+                                  }
                                   className="lg:w-20 lg:h-20 w-16 h-16 mr-4 object-cover"
                                   // src={ImageData}
                                   src={`../../../public/profileImage/${ImageData}`}
@@ -212,11 +222,23 @@ export default function ProfileSettings() {
                               <div className="lg:w-20 lg:h-20 w-16 h-16 lg:mr-10 rounded-full ring-2 ring-purple-800 border overflow-hidden">
                                 {ProfileImage === null ? (
                                   <img
+                                    onContextMenu={(event) =>
+                                      event.preventDefault()
+                                    }
+                                    onDragStart={(event) =>
+                                      event.preventDefault()
+                                    }
                                     className="lg:w-20 lg:h-20 w-16 h-16 mr-4 object-cover"
                                     src={ProfileImg}
                                   />
                                 ) : (
                                   <img
+                                    onContextMenu={(event) =>
+                                      event.preventDefault()
+                                    }
+                                    onDragStart={(event) =>
+                                      event.preventDefault()
+                                    }
                                     className="lg:w-20 lg:h-20 w-16 h-16 mr-4 object-cover"
                                     src={ProfileImage}
                                   />
@@ -315,25 +337,24 @@ export default function ProfileSettings() {
             </div>
           </div>
         </div>
-              <div className="bg-[#ffffff80] rounded-lg p-3 mt-5 py-4">
-                <button
-                  className="bg-red-800 rounded-lg w-max lg:w-fit py-2 px-3 text-white"
-                  onClick={AddopenModal}
-                >
-                  Delete Account
-                </button>
+        <div className="bg-[#ffffff80] rounded-lg p-3 mt-5 py-4">
+          <button
+            className="bg-red-800 rounded-lg w-max lg:w-fit py-2 px-3 text-white"
+            onClick={AddopenModal}
+          >
+            Delete Account
+          </button>
 
-          {isgoogle ?
+          {isgoogle ? (
             <p></p>
-            :
+          ) : (
             <Link to="/setting/changepassword">
-                  <button className="mb-2 md:mb-0 mx-2 text-purple-800 font-bold text-sm py-2 px-3 w-max rounded-lg lg:w-fit bg-purple-300 hover:bg-purple-800 hover:text-white hover:shadow-lg">
-                    Change Password
-                  </button>
-                </Link>
-          }
-                
-              </div>
+              <button className="mb-2 md:mb-0 mx-2 text-purple-800 font-bold text-sm py-2 px-3 w-max rounded-lg lg:w-fit bg-purple-300 hover:bg-purple-800 hover:text-white hover:shadow-lg">
+                Change Password
+              </button>
+            </Link>
+          )}
+        </div>
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
